@@ -1,0 +1,5 @@
+doc
+.DS_Store
+*.gem
+*~
+.#*

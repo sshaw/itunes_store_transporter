@@ -1,0 +1,25 @@
+success: |
+  Package Summary:
+
+    2 packages were uploaded successfully:
+    /home/sshaw/123123123.itmsp
+    /home/sshaw/456456456.itmsp
+  
+failure: |
+  [2000-01-01 04:56:52] <main> DEBUG: Doing some fun things
+  [2000-01-01 04:56:52] <main> DBG-X: parameter X = 999999999
+  [2000-01-01 00:00:00] <main> DBG-X: parameter FilesToUpload = [metadata.xml, 123123123.mov]
+  [2000-01-01 00:00:00] <main> ERROR: Apple's web service operation was not successful
+  [2000-01-01 00:00:00] <main> ERROR: Unable to authenticate the package: 123123123.itmsp
+  [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-9000: "Your audio of screwed up!"
+  [2000-01-01 04:56:52] <main> DEBUG: Yup, yer audio is shot
+  [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-4009: "Chapter timecode is just plain wrong"
+
+  Package Summary:
+ 
+    1 package was not uploaded because of some problems:
+      /home/sshaw/123123123.itmsp - Error Messages:
+      Apple's web service operation was not successful
+        Unable to authenticate the package: 123123123.itmsp
+        ERROR ITMS-9000: "Your audio of screwed up!"	     
+        ERROR ITMS-4009: "Chapter timecode is just plain wrong"

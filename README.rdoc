@@ -1,0 +1,53 @@
+= iTunes::Store::Transporter
+
+Upload and manage your assets in the iTunes Store using the iTunes Store's Transporter (+iTMSTransporter+).
+
+*Warning* This is _alpha_ code.
+
+=== Overview
+
+ require "itunes/store/transporter"
+
+ itms = iTunes::Store::Transporter.new(:username => "CouchCaster",
+       				       :shortname => "bigtimer",
+				       :password => "w3c@llYoU!")
+  
+ itms.upload("/path/to/yourpackage.itmsp")
+ metadata = itms.lookup(:apple_id => "yourpackage") 
+  
+ begin 
+   itms.verify("/path/to/package2.itmsp", :verify_asssets => false) 
+ rescue iTunes::Store::Transporter::ExecutionError => e
+   puts "Exited with #{e.exitcode}"
+
+   e.errors.each do |error|
+     puts "#{error.message} - #{error.code}"
+     puts "Basically, you have some faulty metadata" if error.missing_data? 
+   end
+ end
+
+=== Description
+
+iTunes::Store::Transporter is a wrapper around Apple's +iTMSTransporter+ program. It currently 
+supports the following operations:
+
+* Upload packages
+* Validate packages
+* Retrieve status information
+* Lookup package metadata
+* List providers
+* Retrieve iTunes metadata schemas 
+
+=== More Info
+
+* Documentation: http://rdoc.info/github/sshaw/itunes-store-transporter
+* Source Code: http://githib.com/sshaw/itunes-store-transporter
+* Bugs: http://githib.com/sshaw/itunes-store-transporter/issues
+
+=== Author
+
+Skye Shaw [sshaw AT lucas.cis.temple.edu]
+
+=== License
+
+Released under the MIT License: http://www.opensource.org/licenses/MIT

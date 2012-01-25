@@ -1,0 +1,14 @@
+no_error_number: |
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
+    [2000-01-01 00:00:00] <main> ERROR: "An error occurred while doing fun stuff"
+    [2000-01-01 00:00:00] <Some Class> ERROR: "An exception has occurred: network timeout"
+    [2000-01-01 00:00:00] <main> DBG-X: About to exit
+
+    Package Summary:
+      2 package(s) were not uploaded because they had problems:
+        /home/sshaw/123123123.itmsp - Error Messages:
+           An error has occurred during the upload.
+           ERROR: An error occurred while doing fun stuff
+           ERROR: An exception has occurred: network timeout
+    [2000-01-01 00:00:00] <main> DBG-X: Returning 1
