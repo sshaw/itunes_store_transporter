@@ -5,6 +5,8 @@ module ITunes
     class Transporter
 
       class Shell  # :nodoc:
+        attr :path
+
         EXE_NAME = "iTMSTransporter"
         WINDOWS_EXE = "#{EXE_NAME}.CMD"
         DEFAULT_UNIX_PATH = "/usr/local/itms/bin/#{EXE_NAME}"
@@ -13,7 +15,7 @@ module ITunes
           def windows?
             # We just need to know where iTMSTransporter lives, though cygwin
             # can crow when it receives a Windows path.
-            ChildProcess.windows? #|| ChildProcess.cygwin?
+            ChildProcess.windows? || ChildProcess.os == :cygwin
           end
           
           def default_path
@@ -33,17 +35,22 @@ module ITunes
         
         def exec(argv, &block)
           begin 
-            process = ChildProcess.build(@path, *argv)
+            process = ChildProcess.build(path, *argv)
             
             stdout = IO.pipe
             stderr = IO.pipe
             
+            stdout[1].sync = true
             process.io.stdout = stdout[1]
+
+            stderr[1].sync = true
             process.io.stderr = stderr[1]
             
             process.start
+
             stdout[1].close
             stderr[1].close
+
             poll(stdout[0], stderr[0], &block)          
           rescue ChildProcess::Error, SystemCallError => e
             raise ITunes::Store::Transporter::TransporterError, e.message

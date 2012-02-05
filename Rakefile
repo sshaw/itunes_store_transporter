@@ -1,8 +1,6 @@
 require "rake"
-require "spec/rake/spectask"
+require "rspec/core/rake_task"
 
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList["spec/**/*.rb"]
-end
+RSpec::Core::RakeTask.new(:spec)
 
 task :default => "spec"

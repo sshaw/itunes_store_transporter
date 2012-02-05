@@ -3,12 +3,17 @@ require "itunes/store/transporter/command"
 module ITunes
   module Store
     class Transporter
-      module Command
+      module Command            # :nodoc:
         
         ##
         # Retrieve the status of a previously uploaded package
         #
         class Status < Mode
+          def initialize(*config)
+            super
+            options.on *VENDOR_ID
+          end
+
           protected 
           def handle_success(stdout_lines, stderr_lines, options) 
             status = {}

@@ -11,8 +11,7 @@ module ITunes
         attr :exitstatus        
         
         def initialize(errors, exitstatus = nil)
-          # Why dup?
-          @errors = errors.dup # TODO: Remove dups
+          @errors = [ errors ].flatten
           @exitstatus = exitstatus
           super @errors.map { |e| e.to_s }.join ", "
         end         
@@ -26,9 +25,9 @@ module ITunes
           @message = message
           @code = code
         end
-        
-        # 1000...2000?
 
+        # 1000...2000?
+        
         def bad_data?
           (3000...4000).include?(code)
         end

@@ -36,8 +36,6 @@ module ITunes
 	private
 	def parse_output(output)
 	  output.each do |line|
-            # Note if logging is off ERROR_LINE wont match and only the lines contained 
-            # in create_message() are output            
 	    if line =~ ERROR_LINE
 	      error = $1
 	      next if SKIP_ERRORS.any? { |skip| error =~ skip }
@@ -53,7 +51,7 @@ module ITunes
         # TODO: Error lines beginning with WARNING 
 	def create_message(line)          
 	  case line
-	  when /^ERROR\s+ITMS-(\d+):\s+(.+)/
+	  when /^(?:ERROR|WARNING)\s+ITMS-(\d+):\s+(.+)/
 	    code = $1
 	    message = $2
 	  when /(.+)\s+\((\d+)\)$/,

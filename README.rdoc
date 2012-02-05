@@ -9,26 +9,26 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
  require "itunes/store/transporter"
 
  itms = iTunes::Store::Transporter.new(:username => "CouchCaster",
-       				       :shortname => "bigtimer",
-				       :password => "w3c@llYoU!")
-  
+                                       :shortname => "bigtimer",
+                                       :password => "w3c@llYoU!")
+
  itms.upload("/path/to/yourpackage.itmsp")
- metadata = itms.lookup(:apple_id => "yourpackage") 
-  
- begin 
-   itms.verify("/path/to/package2.itmsp", :verify_asssets => false) 
+ metadata = itms.lookup(:apple_id => "yourpackage")
+
+ begin
+   itms.verify("/path/to/package2.itmsp", :verify_asssets => false)
  rescue iTunes::Store::Transporter::ExecutionError => e
    puts "Exited with #{e.exitcode}"
 
    e.errors.each do |error|
      puts "#{error.message} - #{error.code}"
-     puts "Basically, you have some faulty metadata" if error.missing_data? 
+     puts "Basically, you have some faulty metadata" if error.missing_data?
    end
  end
 
 === Description
 
-iTunes::Store::Transporter is a wrapper around Apple's +iTMSTransporter+ program. It currently 
+iTunes::Store::Transporter is a wrapper around Apple's +iTMSTransporter+ program. It currently
 supports the following operations:
 
 * Upload packages
@@ -36,13 +36,18 @@ supports the following operations:
 * Retrieve status information
 * Lookup package metadata
 * List providers
-* Retrieve iTunes metadata schemas 
+* Retrieve iTunes metadata schemas
+
+=== Requirements
+
+* +optout v0.0.2+ (unreleased, but can be downloaded here: https://github.com/sshaw/optout)
+* iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
 
 === More Info
 
-* Documentation: http://rdoc.info/github/sshaw/itunes-store-transporter
-* Source Code: http://githib.com/sshaw/itunes-store-transporter
-* Bugs: http://githib.com/sshaw/itunes-store-transporter/issues
+* Documentation: http://rdoc.info/github/sshaw/itunes_store_transporter
+* Source Code: http://github.com/sshaw/itunes_store_transporter
+* Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 
 === Author
 

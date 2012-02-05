@@ -6,14 +6,15 @@ module ITunes
       module Command
         
         ##
-        # Download an RelaxNG schema file for a particular metadata specification.
+        # Download a RelaxNG schema file for a particular metadata specification.
         #
 
         class Schema < Mode
           def initialize(*config)
             super
-            options.on :shortname, "-s", String, :required => true
-            options.on :type, "-schemaType", /\A(transitional|strict)\z/i, :required => true  
+            options.on *SHORTNAME
+            options.on *DESTINATION
+            options.on :type, "-schemaType", /\A(transitional|strict)\z/i, :required => true
             options.on :version, "-schema", /\w+/i, :required => true
           end
           

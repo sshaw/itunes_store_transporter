@@ -4,13 +4,16 @@ require "itunes/store/transporter"
 require "itunes/store/transporter/shell"
 require "itunes/store/transporter/errors"
 require "itunes/store/transporter/output_parser"
+require "itunes/store/transporter/command/option"
 
 module ITunes
   module Store
     class Transporter
-      module Command
+      module Command            # :nodoc: all
         
         class Base
+          include Option
+
           def initialize(config, default_options = {})
             @config = config
             @shell = Shell.new(@config[:path])
@@ -43,6 +46,15 @@ module ITunes
           attr :config
           attr :default_options
           
+          def options
+            @options ||= Optout.options do
+              # On Windows we must include this else the Transporter batch script will call `pause` after the Transporter exits
+              on :windows, "-WONoPause"                           
+              # Optout can't do this: [a, b, c] => -X a -X b -X c
+              on :jvm, "-X" #, :multiple => true           
+            end
+          end
+
           # TODO: conf[:warnings]
           def handle_success(stdout_lines, stderr_lines, options)
             stdout_lines.join
@@ -55,6 +67,7 @@ module ITunes
           end
           
           def create_transporter_options(optz)
+            optz[:windows] = "true" if Transporter::Shell.windows?
             options.argv(default_options.merge(optz))
           rescue Optout::OptionError => e
             raise ITunes::Store::Transporter::OptionError, e.message
@@ -62,32 +75,19 @@ module ITunes
         end
       
         class Mode < Base
-          #OPTIONS[:username]
-
-          protected
-          def options
-            @options ||= Optout.options do
-              on :log, "-o", Optout::File
-              on :verbose, "-v", %w|off informational critical detailed eXtreme|
-              on :username, "-u", :required => true
-              on :password, "-p", :required => true
-              on :summary, "-summaryFile", Optout::File
-              on :mode, "-m", /\w+/, :required => true
-             
-              # On Windows we must include this else Transporter will call `pause` when an error occurs            
-              on :windows, "-WONoPause"               
-            
-              # Will Transporter accept multiple JVM args?
-              # Optout can't do this: [a, b, c] => -X a -X b -X c
-              on :jvm, "-X", :multiple => true           
-            end
+          def initialize(*config)          
+            super 
+            options.on :log, "-o", Optout::File
+            options.on :verbose, "-v", %w|informational critical detailed eXtreme| # Since log output is critical to determining what's going on we can't include "off" 
+            options.on :username, "-u", :required => true
+            options.on :password, "-p", :required => true
+            options.on :summary, "-summaryFile", Optout::File
+            options.on :mode, "-m", /\w+/, :required => true          
           end
         
           def create_transporter_options(optz)
-            optz = optz.dup 
             optz[:mode] = mode
-            optz[:windows] = "true" if Transporter::Shell.windows?
-            super optz
+            super
           end
         
           def mode

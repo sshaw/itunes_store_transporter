@@ -5,16 +5,17 @@ require "itunes/store/transporter/command"
 module ITunes
   module Store
     class Transporter
-      module Command
+      module Command            # :nodoc:
 
         ##
         # Validate the contents of a package's metadata and assets.
         #
+
         class Verify < Mode
           def initialize(*config)
             super
-            options.on :shortname, "-s", /\w+/
-            options.on :package, "-f", Optout::Dir.exists, :required => true
+            options.on *SHORTNAME
+            options.on *PACKAGE
             options.on :verify_assets, "-disableAssetVerification", Optout::Boolean  # If false verify MD only no assets
           end
 

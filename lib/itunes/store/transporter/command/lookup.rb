@@ -14,13 +14,12 @@ module ITunes
         class Lookup < Mode
           def initialize(*config)
             super
-            # These 2 are mutually exclusive, Optout has no way to denote this
-            options.on :vendor_id, "-vendor_id"
-            options.on :apple_id, "-apple_id"
-
-            # Schema req this option too
-            options.on :shortname, "-s", :required => true
-            options.on :destination, "-destination"
+            # These 2 are mutually exclusive, and one is required. 
+            # Optout has no way to denote this
+            options.on *VENDOR_ID
+            options.on *APPLE_ID
+            options.on *SHORTNAME
+            options.on *DESTINATION
           end
 
           def run(options = {})
@@ -28,7 +27,7 @@ module ITunes
             options[:destination] = Dir.mktmpdir
             super options
           ensure
-            FileUtils.rm_r(options[:destination])
+            FileUtils.rm_rf(options[:destination])
           end
 
           protected
