@@ -23,9 +23,8 @@ module ITunes
           end
 
           def run(options = {})
-            options = options.dup
             options[:destination] = Dir.mktmpdir
-            super options
+            super
           ensure
             FileUtils.rm_rf(options[:destination])
           end

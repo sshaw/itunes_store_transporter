@@ -24,10 +24,10 @@ module ITunes
       # [:print_stderr] Print +iTMSTransporter+'s stderr to your stderr. Defaults to +false+. 
       #
 
-      def initialize(options = {})
-        @defaults = options.dup
+      def initialize(options = nil)
+        @defaults = create_options(options)
         @config = { 
-          :path	      => @defaults.delete(:path),
+          :path	        => @defaults.delete(:path),
           :print_stdout => @defaults.delete(:print_stdout), 
           :print_stderr => @defaults.delete(:print_stderr), 
         }        
@@ -135,19 +135,25 @@ module ITunes
       
       %w|upload verify|.each do |command|
         define_method(command) do |package, *options| 
-          cmd_options = Hash === options.first ? options.shift.dup : {}
+          cmd_options = create_options(options.first)
           cmd_options[:package] = package
           run_command(command, cmd_options)
         end
       end
       
-      %w|lookup providers schema status upload verify version|.each do |command|
+      %w|lookup providers schema status version|.each do |command|
         define_method(command) { |*options| run_command(command, options.shift) }
       end          
 
       private 
       def run_command(name, options) 
-        Command.const_get(name.capitalize).new(@config, @defaults).run(options)       
+        Command.const_get(name.capitalize).new(@config, @defaults).run(create_options(options))
+      end
+
+      def create_options(options)
+        options ||= {}
+        raise ArgumentError, "options must be a Hash" unless Hash === options
+        options.dup
       end
     end
   end

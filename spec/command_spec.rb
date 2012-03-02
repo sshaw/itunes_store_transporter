@@ -1,11 +1,40 @@
 require "spec_helper"
 require "stringio"
 
+shared_examples_for "a transporter option" do |option, expected|
+  it "creates the correct command line argument" do 
+    ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected); 0 }
+    subject.run(options.merge(option))
+  end
+end
+
+shared_examples_for "a transporter option that requires a value" do |option|
+  it "must have a value" do 
+    ["", nil].each do |value|
+      lambda { subject.run(options.merge(option => value)) }.should raise_exception(ITunes::Store::Transporter::OptionError, /#{option}/) 
+    end
+  end
+end
+
+shared_examples_for "a required transporter option" do |option|
+  it "is required" do 
+    options = options.delete(option)
+    lambda { subject.run(options) }.should raise_exception(ITunes::Store::Transporter::OptionRequired, /#{option}/)
+  end
+end
+
 shared_examples_for "a subclass of Command::Base" do 
   it { should be_a_kind_of(ITunes::Store::Transporter::Command::Base) }
 
   context "when on Windows" do 
-    it "automatically sets NoPause to true"
+    it "automatically sets NoPause to true" do 
+      ENV["PROGRAMFILES"] = "C:\\"
+      shell = ITunes::Store::Transporter::Shell
+      shell.any_instance.stub(:exec) { |*arg| arg.first.should include("-WONoPause", "true") }
+      shell.stub(:windows? => true)
+      mock_output
+      subject.run(options)
+    end
   end
   
   describe "options" do 
@@ -93,10 +122,7 @@ end
 
 shared_examples_for "a transporter mode" do   
   it_should_behave_like "a subclass of Command::Base"
-
   it { should be_a_kind_of(ITunes::Store::Transporter::Command::Mode) }  
-
-  #it "passes the mode string as an argument"
 
   it "requires a username" do 
     args = options
@@ -165,6 +191,7 @@ end
 
 describe ITunes::Store::Transporter::Command::Upload do
   it_behaves_like "a transporter mode"
+  it_behaves_like "a command that requires a package argument"
 
   subject { described_class.new({}) }  
   let(:options) { create_options(:package => create_package, :transport => "Aspera")  }
@@ -176,6 +203,73 @@ describe ITunes::Store::Transporter::Command::Upload do
         mock_output(:stdout => "stdout.success")    
         subject.run(options).should be_true
       end   
+    end
+  end  
+
+  # shortname, package
+  describe "options" do 
+    describe ":rate" do 
+      it "must be an integer" do 
+        lambda { subject.run(options.merge(:rate => "123")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /rate/)
+      end
+      
+      it_should_behave_like "a transporter option", {:rate => 123}, "-k", "123"
+    end
+
+    describe ":transport" do 
+      %w|Aspera Signiant DAV|.each do |name|
+        context "with #{name}" do 
+          it_should_behave_like "a transporter option", {:transport => name}, "-t",  name
+        end
+      end
+
+      it "is case sensitive" do 
+        lambda { subject.run(options.merge(:transport => "aspera")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+      end
+      
+      it "raises an OptionError if the transport is not supported" do 
+        lambda { subject.run(options.merge(:transport => "ftp")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+      end     
+    end
+
+    describe ":delete_on_success" do 
+      it "raises an OptionError if not boolean" do 
+        lambda { subject.run(options.merge(:delete_on_success => 1)) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+
+      end
+
+      context "when true" do 
+        it_should_behave_like "a transporter option", {:delete_on_success => true}, "-delete"
+      end
+
+      # This should not include, probably better to say:
+      # subject.run.should include_option
+      # subject.run.should_not include_option
+      #context "when false" do 
+      #  it_should_behave_like "a transporter option", {:delete_on_success => false}, "-delete"
+      #end
+    end
+
+    describe ":log_history" do
+      it_should_behave_like "a transporter option", {:log_history => "."}, "-loghistory", "."
+    end
+
+    describe ":delete" do
+      it_should_behave_like "a transporter option", {:delete => true}, "-delete"
+    end
+
+    describe ":on_success" do 
+      context "when the directory does not exist" do 
+        it "raises an OptionError" do 
+          lambda { subject.run(options.merge(:on_success => "__baaaaahd_directory__")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+        end
+      end
+      
+      it_should_behave_like "a transporter option", {:on_success => "."}, "-success", "."
+    end
+
+    describe ":on_failure" do
+      it_should_behave_like "a transporter option", {:on_failure => "."}, "-failure",  "."
     end
   end
 end
@@ -189,27 +283,35 @@ describe ITunes::Store::Transporter::Command::Lookup do
 
   describe "#run" do 
     context "when successful" do 
+
+      # iTMSTransporter creates a directory containing the metadata
       before(:all) do 
         @tmpdir = Dir.mktmpdir
         Dir.stub(:mktmpdir => @tmpdir)
 
         @package = File.join(@tmpdir, "#{options[:vendor_id]}.itmsp")
         Dir.mkdir(@package)
+
+        @metadata = "<x>Metadata</x>"
+        File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }      
+        
+        mock_output
       end
     
       after(:all) { FileUtils.rm_rf(@tmpdir) }
   
       it "returns the metadata" do     
-        metadata = "<x>Metadata</x>"
-        File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(metadata) }      
-        
-        mock_output
-        subject.run(options).should == metadata
+        subject.run(options).should == @metadata
       end
   
       it "deletes the temp directory used to output the metadata" do 
         File.exists?(@tmpdir).should be_false
       end
+    end
+  end
+
+  describe "options" do 
+    describe ":vendor_id" do 
     end
   end
 end
@@ -226,6 +328,22 @@ describe ITunes::Store::Transporter::Command::Schema do
       it "returns the requested schema" do     
         mock_output(:stdout => [ "<x>Film Schema</x>" ], :stderr => "stderr.info")
         subject.run(options).should == "<x>Film Schema</x>"
+      end
+    end
+  end
+
+  # destination, shortname
+  describe "options" do 
+    describe ":version" do 
+      it_should_behave_like "a transporter option", {:version => "versionX"}, "-schema",  "versionX"
+    end
+
+    # Like Upload's :trasport, case sen., limited to a set
+    describe ":type" do 
+      %w|transitional strict|.each do |type|
+        context "with #{type}" do 
+          it_should_behave_like "a transporter option", {:type => type}, "-schemaType", type
+        end
       end
     end
   end
@@ -255,6 +373,9 @@ describe ITunes::Store::Transporter::Command::Status do
       end
     end
   end
+  
+  #describe "options" 
+  #:vendor_id
 end
 
 describe ITunes::Store::Transporter::Command::Verify do
@@ -282,6 +403,13 @@ describe ITunes::Store::Transporter::Command::Verify do
         end
       end
     end
+  end
+
+  describe "options" do 
+    # should not include 
+    #describe ":verify_assets" do 
+    #it_should_behave_like "a transporter option", {:verify_assets => false}, "-disableAssetVerification"
+    #end
   end
 end
 
@@ -329,3 +457,5 @@ describe ITunes::Store::Transporter::Command::Version do
     end
   end   
 end
+
+

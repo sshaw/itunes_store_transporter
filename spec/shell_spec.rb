@@ -6,11 +6,12 @@ describe ITunes::Store::Transporter::Shell do
     ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["ruby_install_name"])
     temp = Tempfile.new ""
     temp.write(<<-CODE)
-      $stdout.sync = true
-      $stderr.sync = true
       $stdout.puts "OUT 1"
+      $stdout.flush
       $stderr.puts "ERR 1"
+      $stderr.flush
       $stdout.puts "OUT 2"
+      $stdout.flush
       $stderr.puts "ERR 2"
     CODE
 

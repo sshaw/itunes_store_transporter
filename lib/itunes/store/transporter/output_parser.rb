@@ -48,7 +48,6 @@ module ITunes
           # TODO: Remove dups from both arrays
 	end
 
-        # TODO: Error lines beginning with WARNING 
 	def create_message(line)          
 	  case line
 	  when /^(?:ERROR|WARNING)\s+ITMS-(\d+):\s+(.+)/

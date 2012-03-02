@@ -4,7 +4,7 @@ require "itunes/store/transporter/command"
 module ITunes
   module Store
     class Transporter
-      module Command            # :nodoc:
+      module Command            # :nodoc: all
 
         ##
         # Upload a package to the iTunes Store
@@ -17,7 +17,8 @@ module ITunes
             options.on *TRANSPORT
             options.on *ON_SUCCESS
             options.on *ON_FAILURE
-            options.on :rate, "-k", /\A\d+[KM]?\z/    # Required if TRANSPORT is Aspera or Signiant 
+            options.on :delete, "-delete", Optout::Boolean
+            options.on :rate, "-k", Fixnum    # Required if TRANSPORT is Aspera or Signiant 
             options.on :log_history, "-loghistory", Optout::Dir.exists
             options.on :delete_on_success, "-delete", Optout::Boolean
           end

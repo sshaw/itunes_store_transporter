@@ -21,6 +21,7 @@ module ITunes
           def default_path
             if windows?
               # The Transporter installer prefers x86
+              # But... I think ruby normalizes this to just PROGRAMFILES
               root = ENV["PROGRAMFILES(x86)"] || ENV["PROGRAMFILES"] # Need C:\ in case?
               File.join(root, WINDOWS_EXE)
             else

@@ -67,7 +67,7 @@ module ITunes
           end
           
           def create_transporter_options(optz)
-            optz[:windows] = "true" if Transporter::Shell.windows?
+            optz[:windows] = "true" if Transporter::Shell.windows?            
             options.argv(default_options.merge(optz))
           rescue Optout::OptionError => e
             raise ITunes::Store::Transporter::OptionError, e.message

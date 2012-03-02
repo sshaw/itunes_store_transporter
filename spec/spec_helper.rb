@@ -15,6 +15,11 @@ module SpecHelper
     Dir.mktmpdir ["",".itmsp"]
   end
 
+  def expect_shell_args(*expected)    
+    ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected) } 
+    p "###### #{subject}"
+  end
+
   def fixture(path)
     Fixture.for(path)
   end

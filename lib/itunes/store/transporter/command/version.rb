@@ -4,21 +4,21 @@ require "itunes/store/transporter/command"
 module ITunes
   module Store
     class Transporter
-      module Command            # :nodoc:
+      module Command            # :nodoc: all
         
         ## 
         # Return the +iTMSTransporter+ version.
         #
         class Version < Base
-          protected
           def initialize(*config)
             super
             options.on :version, "-version"
           end
 
+          protected
           def create_transporter_options(optz)
             optz[:version] = true
-            super optz
+            super
           end
           
           def handle_success(stdout_lines, stderr_lines, options)

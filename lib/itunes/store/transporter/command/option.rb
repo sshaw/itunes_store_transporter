@@ -6,10 +6,10 @@ module ITunes
       module Command
         module Option
           # Common command options
-          VENDOR_ID   = [ :vendor_id, "-vendor_id" ]
-          APPLE_ID    = [ :apple_id, "-apple_id" ]
+          VENDOR_ID   = [ :vendor_id, "-vendor_id", /\w/ ]
+          APPLE_ID    = [ :apple_id, "-apple_id", /\w/ ]
           SHORTNAME   = [ :shortname, "-s", String ]
-          TRANSPORT   = [ :transport, "-t", %w|Aspera Signiant DAV| ] # case sensitive?
+          TRANSPORT   = [ :transport, "-t", %w|Aspera Signiant DAV| ]
           ON_SUCCESS  = [ :on_success, "-success", Optout::Dir.exists ]
           ON_FAILURE  = [ :on_failure, "-failure", Optout::Dir.exists ]         
           PACKAGE     = [ :package, "-f", Optout::Dir.exists.named(/\.itmsp\z/), { :required => true } ]
