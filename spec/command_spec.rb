@@ -8,7 +8,7 @@ shared_examples_for "a transporter option" do |option, expected|
   end
 end
 
-shared_examples_for "a transporter option that requires a value" do |option|
+shared_examples_for "a required option" do |option|
   it "must have a value" do 
     ["", nil].each do |value|
       lambda { subject.run(options.merge(option => value)) }.should raise_exception(ITunes::Store::Transporter::OptionError, /#{option}/) 
@@ -16,10 +16,18 @@ shared_examples_for "a transporter option that requires a value" do |option|
   end
 end
 
-shared_examples_for "a required transporter option" do |option|
-  it "is required" do 
-    options = options.delete(option)
-    lambda { subject.run(options) }.should raise_exception(ITunes::Store::Transporter::OptionRequired, /#{option}/)
+shared_examples_for "a command that accepts a shortname argument" do     
+  context "when the shortname's invalid" do 
+    it "raises an OptionError" do 
+      lambda { subject.run(options.merge(:shortname => "+")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /shortname/)       
+    end
+  end
+
+  context "when the shortname's valid" do 
+    it "does not raise an exception" do 
+      mock_output
+      lambda { subject.run(options.merge(:shortname => "Too $hort")) }.should_not raise_exception
+    end
   end
 end
 
@@ -138,39 +146,40 @@ shared_examples_for "a transporter mode" do
 end
 
 shared_examples_for "a command that requires a package argument" do     
-  context "when missing" do 
-    it "will raise an OptionError" do 
-      options = create_options
-      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /package/)
+  it_should_behave_like "a required option", :package
+
+  context "when a directory" do   
+    before(:all) do
+      @tmpdir = Dir.mktmpdir 
+      @pkgdir = File.join(@tmpdir, "package.itmsp")
+      Dir.mkdir(@pkgdir)
     end
+    
+    after(:all) { FileUtils.rm_rf(@tmpdir) }
+    
+    it "must end in .itmsp" do 
+      options = create_options(:package => @tmpdir)
+      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /must match/i)
+
+      mock_output(:exit => 0)
+      options = create_options(:package => @pkgdir)
+      lambda { subject.run(options) }.should_not raise_error
+    end    
+    
+    it "must exist" do       
+      options = create_options(:package => File.join(@tmpdir, "badpkg.itmsp"))
+      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /does not exist/i)
+    end  
   end
   
-  # context "when given" do 
-  #   before(:all) { @tmpdir = Dir.mktmpdir }
-  #   after(:all) { FileUtils.rm_rf(@tmpdir) }
-
-  #   context "as a file" do 
-  #     it "raises an OptionError" do 
-  #       path = Tempfile.new("").path
-  #       options = create_options(:package => path)
-  #       lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /dir/i)
-  #     end
-  #   end
-
-  #   context "as a directory that does not end in .itmsp" do 
-      
-  #   end
-
-  #   context "when given as a directory that does end in .itmsp" do 
-      
-  #   end
-
-
-  #   it "must be end in .itmsp" do 
-  #     options = create_options(:package => @tmpdir)
-  #     lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /dir/i)
-  #   end  
-  # end
+  context "when a file" do 
+    it "raises an OptionError" do 
+      path = Tempfile.new("").path
+      options = create_options(:package => path)
+      # TODO: Optout's error message will probably be changed to something more descriptive, change this when that happens
+      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /dir/i)
+    end
+  end
 end
 
 describe ITunes::Store::Transporter::Command::Providers do
@@ -192,6 +201,7 @@ end
 describe ITunes::Store::Transporter::Command::Upload do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that requires a package argument"
+  it_behaves_like "a command that accepts a shortname argument"
 
   subject { described_class.new({}) }  
   let(:options) { create_options(:package => create_package, :transport => "Aspera")  }
@@ -206,7 +216,6 @@ describe ITunes::Store::Transporter::Command::Upload do
     end
   end  
 
-  # shortname, package
   describe "options" do 
     describe ":rate" do 
       it "must be an integer" do 
@@ -276,6 +285,7 @@ end
 
 describe ITunes::Store::Transporter::Command::Lookup do
   it_behaves_like "a transporter mode"
+  it_behaves_like "a command that accepts a shortname argument" 
 
   subject { described_class.new({}) }
   let(:options) { create_options(:vendor_id => "X") }  
@@ -318,6 +328,7 @@ end
 
 describe ITunes::Store::Transporter::Command::Schema do
   it_behaves_like "a transporter mode"
+  it_behaves_like "a command that accepts a shortname argument"
 
   subject { described_class.new({}) }
   let(:options) { create_options(:type => "strict", :version => "film5") }
@@ -332,7 +343,7 @@ describe ITunes::Store::Transporter::Command::Schema do
     end
   end
 
-  # destination, shortname
+  # destination
   describe "options" do 
     describe ":version" do 
       it_should_behave_like "a transporter option", {:version => "versionX"}, "-schema",  "versionX"
@@ -381,6 +392,7 @@ end
 describe ITunes::Store::Transporter::Command::Verify do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that requires a package argument"    
+  it_behaves_like "a command that accepts a shortname argument"
 
   subject { described_class.new({}) }
   its(:mode) { should == "verify" }

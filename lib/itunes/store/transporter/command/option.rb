@@ -8,7 +8,7 @@ module ITunes
           # Common command options
           VENDOR_ID   = [ :vendor_id, "-vendor_id", /\w/ ]
           APPLE_ID    = [ :apple_id, "-apple_id", /\w/ ]
-          SHORTNAME   = [ :shortname, "-s", String ]
+          SHORTNAME   = [ :shortname, "-s", /\w/ ]
           TRANSPORT   = [ :transport, "-t", %w|Aspera Signiant DAV| ]
           ON_SUCCESS  = [ :on_success, "-success", Optout::Dir.exists ]
           ON_FAILURE  = [ :on_failure, "-failure", Optout::Dir.exists ]         

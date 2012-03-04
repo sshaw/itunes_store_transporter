@@ -17,11 +17,11 @@ module ITunes
       ##
       # === Options
       #  
-      # Options given here will be used as options for all subsequent method calls. Thus you can set method specific options here but, if you call a method that does not accept these options, it will raise an OptionError. 
+      # Options given here will be used as defaults, i.e., for all subsequent method calls. Thus you can set method specific options here but, if you call a method that does not accept these options, it will raise an OptionError. 
       #      
-      # [:path] The path to the +iTMSTransporter+. Optional.
-      # [:print_stdout] Print +iTMSTransporter+'s stdout to your stdout. Defaults to +false+. 
-      # [:print_stderr] Print +iTMSTransporter+'s stderr to your stderr. Defaults to +false+. 
+      # [:path (String)] The path to the +iTMSTransporter+. Optional.
+      # [:print_stdout (Boolean)] Print +iTMSTransporter+'s stdout to your stdout. Defaults to +false+. 
+      # [:print_stderr (Boolean)] Print +iTMSTransporter+'s stderr to your stderr. Defaults to +false+. 
       #
 
       def initialize(options = nil)
