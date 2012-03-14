@@ -18,7 +18,7 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
  begin
    itms.verify("/path/to/package2.itmsp", :verify_asssets => false)
  rescue iTunes::Store::Transporter::ExecutionError => e
-   puts "Exited with #{e.exitcode}"
+   puts "Exited with #{e.exitstatus}"
 
    e.errors.each do |error|
      puts "#{error.message} - #{error.code}"
@@ -40,7 +40,7 @@ supports the following operations:
 
 === Requirements
 
-* +optout v0.0.2+ (unreleased, but can be downloaded here: https://github.com/sshaw/optout)
+* Optout v0.0.2 (<code>gem install optout</code>)
 * iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
 
 === More Info

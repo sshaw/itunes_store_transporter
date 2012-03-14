@@ -18,7 +18,7 @@ module ITunes
             # Optout has no way to denote this
             options.on *VENDOR_ID
             options.on *APPLE_ID
-            options.on *SHORTNAME
+            #options.on *SHORTNAME
             options.on *DESTINATION
           end
 

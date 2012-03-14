@@ -38,7 +38,7 @@ module ITunes
             if exitcode == 0
               handle_success(stdout_lines, stderr_lines, options)
             else
-              handle_error(stdout_lines, stderr_lines, exitcode, options)
+              handle_error(stdout_lines, stderr_lines, options, exitcode)
             end
           end
 
@@ -82,7 +82,8 @@ module ITunes
             options.on :username, "-u", :required => true
             options.on :password, "-p", :required => true
             options.on :summary, "-summaryFile", Optout::File
-            options.on :mode, "-m", /\w+/, :required => true          
+            options.on :mode, "-m", /\w+/, :required => true    
+            options.on *SHORTNAME
           end
         
           def create_transporter_options(optz)

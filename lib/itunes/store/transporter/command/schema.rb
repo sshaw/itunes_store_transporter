@@ -12,7 +12,7 @@ module ITunes
         class Schema < Mode
           def initialize(*config)
             super
-            options.on *SHORTNAME
+            #options.on *SHORTNAME
             options.on *DESTINATION
             options.on :type, "-schemaType", /\A(transitional|strict)\z/i, :required => true
             options.on :version, "-schema", /\w+/i, :required => true

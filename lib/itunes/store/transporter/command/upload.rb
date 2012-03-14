@@ -13,7 +13,7 @@ module ITunes
           def initialize(*config)
             super
             options.on *PACKAGE
-            options.on *SHORTNAME
+            #options.on *SHORTNAME
             options.on *TRANSPORT
             options.on *ON_SUCCESS
             options.on *ON_FAILURE

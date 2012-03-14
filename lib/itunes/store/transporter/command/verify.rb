@@ -14,7 +14,7 @@ module ITunes
         class Verify < Mode
           def initialize(*config)
             super
-            options.on *SHORTNAME
+            #options.on *SHORTNAME
             options.on *PACKAGE
             options.on :verify_assets, "-disableAssetVerification", Optout::Boolean  # If false verify MD only no assets
           end
