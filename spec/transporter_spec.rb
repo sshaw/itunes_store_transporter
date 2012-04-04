@@ -1,46 +1,106 @@
+require "spec_helper"
 require "itunes/store/transporter"
 
+shared_examples_for "a transporter method" do
+  it "uses the default options" do
+    defaults = create_options
+    config = {
+      :path => "/",
+      :print_stderr => true,
+      :print_stdout => true
+    }
+
+    s = stub(command)
+    s.should_receive(:run)
+
+    klass = ITunes::Store::Transporter::Command.const_get(command)
+    klass.should_receive(:new).with(config, defaults).and_return(s)
+
+    described_class.new(config.merge(defaults)).send(method, options)
+  end
+end
+
+shared_examples_for "a transporter method without a package argument" do 
+  it_behaves_like "a transporter method"
+
+  it "executes the underlying command" do
+    ITunes::Store::Transporter::Command.const_get(command).any_instance.should_receive(:run).with(options)
+    subject.send(method, options)
+  end
+end
+
+shared_examples_for "a transporter method with a package argument" do 
+  it_behaves_like "a transporter method"
+
+  it "executes the underlying command" do
+    ITunes::Store::Transporter::Command.const_get(command).any_instance.should_receive(:run).with(:package => "package.itmsp")
+    subject.send(method, "package.itmsp")
+  end
+end
+
+
 describe ITunes::Store::Transporter do
-  describe "#new" do 
-    context "when the options are not a Hash or nil" do 
-      it "raises an ArgumentError" do 
-        lambda { described_class.new(123) }.should raise_exception(ArgumentError, /must be/)
+  let(:options) { {} }
+
+  describe "#new" do
+    context "when the options are not a Hash or nil" do
+      it "raises an ArgumentError" do
+	lambda { described_class.new(123) }.should raise_exception(ArgumentError, /must be/)
       end
     end
   end
 
-  describe "#providers" do 
-    it "inherrits the defaults" do
-      config = { 
-        :path => "/",
-        :print_stderr => true,
-        :print_stdout => true       
-      }
+  describe "#lookup" do
+    let(:method) { :lookup }
+    let(:command) { "Lookup" }
 
-      defaults = create_options # { :username => "sh" }
+    it_behaves_like "a transporter method without a package argument"
 
-      cmd = ITunes::Store::Transporter::Command::Providers.any_instance
-      cmd.should_receive(:new).with(config, defaults).should_receive(:run)
-      described_class.new(config.merge(defaults)).providers
-    end
-
-    # it "executes the command" do 
-    #   ITunes::Store::Transporter::Command::Providers.any_instance.should_receive(:run)
-    #   subject.providers
-    # end
-  end
-
-  describe "#upload" do 
-    it "executes the command" do 
-      ITunes::Store::Transporter::Command::Upload.any_instance.should_receive(:run).with(:package => "package.itmsp")
-      subject.upload("package.itmsp")
+    it "executes the underlying command" do
+      ITunes::Store::Transporter::Command::Lookup.any_instance.should_receive(:run)
+      subject.lookup
     end
   end
 
-  describe "#verify" do 
-    it "executes the command" do 
-      ITunes::Store::Transporter::Command::Verify.any_instance.should_receive(:run).with(:package => "package.itmsp")
-      subject.verify("package.itmsp")
-    end
+  describe "#providers" do
+    let(:method) { :providers }
+    let(:command) { "Providers" }
+
+    it_behaves_like "a transporter method without a package argument"
+  end
+
+  describe "#schema" do
+    let(:method) { :schema }
+    let(:command) { "Schema" }
+
+    it_behaves_like "a transporter method without a package argument"
+  end
+
+  describe "#status" do
+    let(:method) { :status }
+    let(:command) { "Status" }
+
+    it_behaves_like "a transporter method without a package argument"
+  end
+
+  describe "#upload" do
+    let(:method) { :upload }
+    let(:command) { "Upload" }
+
+    it_behaves_like "a transporter method with a package argument"
+  end
+
+  describe "#verify" do
+    let(:method) { :verify }
+    let(:command) { "Verify" }
+
+    it_behaves_like "a transporter method with a package argument"  
+  end
+
+  describe "#version" do
+    let(:method) { :version }
+    let(:command) { "Version" }
+
+    it_behaves_like "a transporter method without a package argument"  
   end
 end
