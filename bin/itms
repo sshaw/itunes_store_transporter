@@ -1,0 +1,58 @@
+require "yaml"
+require "itunes/store/transporter"
+
+# Command line interface to the ITunes::Store::Transporter library. 
+# Using this is sorta sort of like using iTMSTransporter except you can set global and per-command defaults in $HOME/.itms
+
+RC_FILE_NAME = ".itms"
+COMMANDS = ITunes::Store::Transporter.instance_methods(false).map(&:to_s)
+
+def home
+  ENV["HOME"] || ENV["USERPROFILE"]
+end
+
+def load_config
+  config = {}
+  return config unless home
+
+  path = File.join(home, RC_FILE_NAME)
+  if File.file?(path)
+    config = YAML.load_file(path) 
+
+    # Put the global defaults under a single key.
+    # slice() returns an aray on Ruby < 1.9
+    v = config.select { |k,v| !v.is_a?(Hash) }
+    config["defaults"] = v.is_a?(Hash) ? v : Hash[v] 
+  end
+
+  config
+end
+
+command = ARGV.shift
+abort("usage: itms command [options]") unless command
+abort("invalid command '#{command}', valid commands are: #{COMMANDS.join(', ')}") unless COMMANDS.include?(command)
+
+config   = load_config
+defaults = (config[command] || {}).merge(config["defaults"])
+options  = [{}]
+
+ARGV.each do |opt|
+  opt = opt.dup
+  if opt.sub!(/\A--(?=\w)/, "")
+    key, val = opt.split(/=/, 2)
+    key.gsub!(/-/, "_")
+    val = true unless val
+    val = val.to_i if val =~ /\A\d+\z/                         
+    defaults[key] = val                        
+  else
+    # should break here...
+    options.unshift opt
+  end
+end
+
+begin 
+  itms = ITunes::Store::Transporter.new(defaults)
+  itms.send(command, *options)
+rescue ITunes::Store::Transporter::TransporterError => e
+  puts e.message
+end
