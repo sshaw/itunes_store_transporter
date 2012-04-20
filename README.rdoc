@@ -38,10 +38,63 @@ supports the following operations:
 * List providers
 * Retrieve iTunes metadata schemas
 
+It also includes +itms+, an executable that's sorta like using iTMSTransporter directly, except 
+that it can send email notifications and allows one to set global/per-command defaults via <code>$HOME/.itms</code>.
+
 === Requirements
 
 * Optout v0.0.2 (<code>gem install optout</code>)
 * iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
+
+=== Using itms
+
+<code>itms COMMAND [OPTIONS]</code>
+
+* +COMMAND+ - The command (<code>iTunes::Store::Transporter</code> method) to run
+* +OPTIONS+ - These are equivalent to the given +COMMAND+'s options except they must be given in long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>.
+
+==== Config file
+
+Default options and email notifications can be placed in a YAML file at <code>$HOME/.itms</code>. 
+
+    # Global command defaults
+    path: /usr/bin
+    username: sshaw
+    password: Pa55W0rd!
+
+    # Global email defaults    
+    email:
+      to: everyone@example.com
+      from: no-reply@example.com
+      host: smtp.example.com
+
+    # Verify command
+    verify:
+      shortname: lUzer
+
+    # Upload command
+    upload:
+      shortname: enc0d3rz
+      transport: aspera
+      bitrate: 750_000
+      # Email notifications for the upload command
+      email:
+	success:
+	  cc: assets@example.com
+	  subject: iTunes Upload <%= @apple_id %>
+	  message: |        
+	    <% @username > uploaded it using <%= @transport %>
+
+	    Bye!
+	failure:
+	  to: support@example.com
+	  subject: Upload Failed!
+	  message: |
+	    Here's the problem: 
+
+	    <%= @error %>	
+
+	    Fix it!
 
 === More Info
 

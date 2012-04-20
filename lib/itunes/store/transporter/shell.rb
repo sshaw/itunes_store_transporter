@@ -53,7 +53,7 @@ module ITunes
             stderr[1].close
 
             poll(stdout[0], stderr[0], &block)          
-          rescue ChildProcess::Error, SystemCallError => e
+          rescue ChildProcess::Error, ChildProcess::LaunchError, SystemCallError => e
             raise ITunes::Store::Transporter::TransporterError, e.message
           ensure
             process.wait if process.alive?

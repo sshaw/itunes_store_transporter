@@ -1,58 +1,213 @@
+#!/usr/bin/env ruby
+
+require "erb"
 require "yaml"
+require "net/smtp"
 require "itunes/store/transporter"
 
 # Command line interface to the ITunes::Store::Transporter library. 
-# Using this is sorta sort of like using iTMSTransporter except you can set global and per-command defaults in $HOME/.itms
+# Using this is sorta like using iTMSTransporter except it can send email notifications and allows
+# one to set global/per-command defaults via $HOME/.itms
 
-RC_FILE_NAME = ".itms"
+module Command
+
+  class << self
+    def execute(name, options, argv)
+      name = name.capitalize
+      # Avoid Ruby 1.8/1.9 String/Symbol/const_defined? differences      
+      if name && !constants.include?(name) && !constants.include?(name.to_sym)
+        raise ArgumentError, "unknown command '#{name}'"
+      end
+
+      handler = const_get(name).new(options)
+      handler.execute(argv) 
+    end
+  end
+
+  class Base
+    def initialize(options)
+      @itms = ITunes::Store::Transporter.new(options)
+      @options = options
+    end
+  end
+  
+  class Providers < Base
+    def execute(args = [])
+      providers = @itms.providers
+
+      if providers.none?
+        puts "No providers"
+      else
+        width = providers.max_by { |e| e[:longname].length }
+        printer = lambda do |*x| 
+          format = "%-#{width}s" * x.length
+          printf format, *x
+        end
+
+        printer.call("Longname", "Shortname")      
+        providers.each { |e| printer.call(e[:longname], 
+                                          e[:shortname]) }     
+      end
+    end
+  end
+
+  class Lookup < Base
+    def execute(args = [])
+      filename = "#{@options["upc"] || @options["vendor_id"]}.xml"
+      metadata = @itms.lookup
+      File.open(filename, "w") { |f| f.write(metadata) }
+      puts "Metadata saved to #{filename}"
+    end
+  end
+  
+  class Schema < Base
+    def execute(args = [])
+      filename = "#{@options["version"]}-#{@options["type"]}.rng"
+      schema = @itms.schema
+      File.open(filename, "w") { |f| f.write(schema) }
+      puts "Schema saved to #{filename}"
+    end
+  end
+  
+  class Upload < Base
+    def execute(args = [])
+      @itms.upload(args.shift)
+      puts "Upload complete"
+    end
+  end
+
+  class Verify < Base
+    def execute(args = [])
+      @itms.verify(args.shift)
+      puts "Package is valid"
+    end
+  end
+end  
+
+class Email  
+  Binding = Class.new do
+    def initialize(options = {})
+      options.each do |k, v|
+        name = k.to_s.gsub(/[^\w]+/, "_")
+        instance_variable_set("@#{name}", v)
+      end
+    end
+  end
+  
+  def initialize(config = {})
+    @config = config
+  end
+  
+  def send(params = {})
+    to      = @config["to"].to_s.split /,/
+    host    = @config["host"] || "localhost"
+    from    = @config["from"] || "#{ENV["USER"]}@#{host}"
+    params  = params.merge(@config)
+    message = ::ERB.new(build_template).def_class(Binding).new(params).result
+
+    # TODO: auth
+    smtp = ::Net::SMTP.start(host, @config["port"]) do |mail|
+      # when to is missing...
+      mail.send_message message, from, to
+    end
+  end
+
+  protected
+  def build_template
+    %w[to from subject cc bcc].inject("") do |t, key|
+      t << "#{key}: #{@config[key]}" if @config[key]
+      t
+    end + "\n\n#{@config["message"]}"
+  end
+end
+
 COMMANDS = ITunes::Store::Transporter.instance_methods(false).map(&:to_s)
+RC_FILE_NAME = ".itms"
 
 def home
   ENV["HOME"] || ENV["USERPROFILE"]
 end
 
-def load_config
+# Should probably create an class for the options 
+def load_config(command)
   config = {}
   return config unless home
 
   path = File.join(home, RC_FILE_NAME)
-  if File.file?(path)
-    config = YAML.load_file(path) 
+  return config unless File.file?(path)
 
-    # Put the global defaults under a single key.
-    # slice() returns an aray on Ruby < 1.9
-    v = config.select { |k,v| !v.is_a?(Hash) }
-    config["defaults"] = v.is_a?(Hash) ? v : Hash[v] 
+  config = YAML.load_file(path) 
+  
+  # Get the global defaults. select() returns an aray on Ruby < 1.9
+  defaults = config.select { |k,v| !v.is_a?(Hash) } 
+  defaults = Hash[defaults] unless defaults.is_a?(Hash) 
+
+  config[command] = defaults.merge(config[command] || {})
+  
+  # Normalize the email config
+  email = Hash.new { |h, k| h[k] = {} }
+
+  %w[success failure].each do |type|  
+    email[type] = (config[command]["email"] ||= {})[type]    
+    next unless email[type]
+
+    # Merge the global email options & the command's "global" options with the success/failure options 
+    settings = (config["email"].to_a + config[command]["email"].to_a).reject { |k, v| k == "success" or k == "failure" }
+    settings.each do |k, v|
+      email[type][k] = email[type][k] ? "#{email[type][k]}, #{v}" : v
+    end
   end
 
-  config
+  config[command]["email"] = email
+  config[command]
+end
+
+def print_errors(e)
+  $stderr.puts "#{e.message.length} error(s)"
+  e.messages.each_with_index do |msg, i|
+    $stderr.puts "#{i}. #{msg}"
+  end
+end
+
+def send_email(config, options)
+  return unless config
+  mail = Email.new(config)
+  mail.send(options)
 end
 
 command = ARGV.shift
 abort("usage: itms command [options]") unless command
 abort("invalid command '#{command}', valid commands are: #{COMMANDS.join(', ')}") unless COMMANDS.include?(command)
 
-config   = load_config
-defaults = (config[command] || {}).merge(config["defaults"])
-options  = [{}]
+options = load_config(command)
 
-ARGV.each do |opt|
-  opt = opt.dup
-  if opt.sub!(/\A--(?=\w)/, "")
-    key, val = opt.split(/=/, 2)
-    key.gsub!(/-/, "_")
-    val = true unless val
-    val = val.to_i if val =~ /\A\d+\z/                         
-    defaults[key] = val                        
-  else
-    # should break here...
-    options.unshift opt
-  end
+while ARGV.any?   
+  opt = ARGV.first.dup
+  break unless opt.sub!(/\A--(?=\w)/, "")
+  
+  key, val = opt.split(/=/, 2)
+  key.gsub!(/-/, "_")
+  val = true unless val
+  val = val.to_i if val =~ /\A\d+\z/                         
+  options[key] = val                        
+  ARGV.shift                         
 end
+
+email_options = options.delete("email")
+command_options = options.dup
+options["argv"] = ARGV
+options["commmand"] = command
 
 begin 
-  itms = ITunes::Store::Transporter.new(defaults)
-  itms.send(command, *options)
+  Command.execute(command, command_options, ARGV)
+  send_email(email_options["success"], options)
+rescue ITunes::Store::Transporter::ExecutionError => e 
+  print_errors(e)
+  options["error"] = e
+  send_email(email_options["failure"], options)
+  exit 1
 rescue ITunes::Store::Transporter::TransporterError => e
-  puts e.message
+  $stderr.puts e
+  exit 2
 end
+

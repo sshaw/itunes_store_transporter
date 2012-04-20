@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   DESC
   s.authors     = ["Skye Shaw"]
   s.email       = "sshaw@lucas.cis.temple.edu"
-  s.excutables  << "itms"
+  s.executables  << "itms"
   s.files       = Dir["lib/**/*.rb", "README.rdoc"]
   s.test_files  = Dir["spec/**/*.rb"]
   s.homepage    = "http://github.com/sshaw/itunes_store_transporter"
