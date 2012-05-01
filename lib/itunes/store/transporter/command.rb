@@ -21,6 +21,7 @@ module ITunes
           end
           
           def run(options = {})
+            options = default_options.merge(options)
             argv = create_transporter_options(options)
             stdout_lines = []
             stderr_lines = []
@@ -68,7 +69,7 @@ module ITunes
           
           def create_transporter_options(optz)
             optz[:windows] = "true" if Transporter::Shell.windows?            
-            options.argv(default_options.merge(optz))
+            options.argv(optz)
           rescue Optout::OptionError => e
             raise ITunes::Store::Transporter::OptionError, e.message
           end

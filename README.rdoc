@@ -80,7 +80,7 @@ Default options and email notifications can be placed in a YAML file at <code>$H
       # Email notifications for the upload command
       email:
         success:
-	  cc: assets@example.com
+          cc: assets@example.com
           subject: iTunes Upload <%= @apple_id %>
           message: |        
             <% @username > uploaded it using <%= @transport %>

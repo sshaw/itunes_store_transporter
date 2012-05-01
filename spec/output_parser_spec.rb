@@ -44,6 +44,15 @@ describe ITunes::Store::Transporter::OutputParser do
         its(:message) { should == "This is error 5000" }
       end
     end
+
+    context "with duplicate messages" do 
+      before(:all) { @parser = described_class.new(fixture("errors_and_warnings.duplicate_errors")) }
+      
+      it "does not include duplicates" do 
+        errors = @parser.errors.map { |e| e.message }
+        errors.should == ["Error 1", "Error 2", "Error 3"]
+      end
+    end
   end
 
   describe "parsing warnings" do 

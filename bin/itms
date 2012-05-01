@@ -15,12 +15,12 @@ module Command
     def execute(name, options, argv)
       name = name.capitalize
       # Avoid Ruby 1.8/1.9 String/Symbol/const_defined? differences      
-      if name && !constants.include?(name) && !constants.include?(name.to_sym)
+      unless constants.include?(name) || constants.include?(name.to_sym)
         raise ArgumentError, "unknown command '#{name}'"
       end
 
-      handler = const_get(name).new(options)
-      handler.execute(argv) 
+      command = const_get(name).new(options)
+      command.execute(argv) 
     end
   end
 
@@ -32,28 +32,20 @@ module Command
   end
   
   class Providers < Base
+    def initialize(options)
+      # Let iTMSTransporter print the providers
+      options[:print_stdout] = true
+      super
+    end
+
     def execute(args = [])
-      providers = @itms.providers
-
-      if providers.none?
-        puts "No providers"
-      else
-        width = providers.max_by { |e| e[:longname].length }
-        printer = lambda do |*x| 
-          format = "%-#{width}s" * x.length
-          printf format, *x
-        end
-
-        printer.call("Longname", "Shortname")      
-        providers.each { |e| printer.call(e[:longname], 
-                                          e[:shortname]) }     
-      end
+      @itms.providers
     end
   end
 
   class Lookup < Base
     def execute(args = [])
-      filename = "#{@options["upc"] || @options["vendor_id"]}.xml"
+      filename = "#{@options[:apple_id] || @options[:vendor_id]}.xml"
       metadata = @itms.lookup
       File.open(filename, "w") { |f| f.write(metadata) }
       puts "Metadata saved to #{filename}"
@@ -62,7 +54,7 @@ module Command
   
   class Schema < Base
     def execute(args = [])
-      filename = "#{@options["version"]}-#{@options["type"]}.rng"
+      filename = "#{@options[:version]}-#{@options[:type]}.rng"
       schema = @itms.schema
       File.open(filename, "w") { |f| f.write(schema) }
       puts "Schema saved to #{filename}"
@@ -70,6 +62,12 @@ module Command
   end
   
   class Upload < Base
+    def initialize(options)
+      # These can take a while so we let the user know what's going on 
+      options[:print_stderr] = true
+      super
+    end
+
     def execute(args = [])
       @itms.upload(args.shift)
       puts "Upload complete"
@@ -95,10 +93,14 @@ class Email
   end
   
   def initialize(config = {})
+    unless config["to"]
+      raise "No email recipeints provided, you must specify at least one" 
+    end
+
     @config = config
   end
   
-  def send(params = {})
+  def send(params = {})    
     to      = @config["to"].to_s.split /,/
     host    = @config["host"] || "localhost"
     from    = @config["from"] || "#{ENV["USER"]}@#{host}"
@@ -107,7 +109,6 @@ class Email
 
     # TODO: auth
     smtp = ::Net::SMTP.start(host, @config["port"]) do |mail|
-      # when to is missing...
       mail.send_message message, from, to
     end
   end
@@ -115,9 +116,9 @@ class Email
   protected
   def build_template
     %w[to from subject cc bcc].inject("") do |t, key|
-      t << "#{key}: #{@config[key]}" if @config[key]
+      t << "#{key}: #{@config[key]}\n" if @config[key]
       t
-    end + "\n\n#{@config["message"]}"
+    end + "\n#{@config["message"]}"
   end
 end
 
@@ -128,7 +129,7 @@ def home
   ENV["HOME"] || ENV["USERPROFILE"]
 end
 
-# Should probably create an class for the options 
+# Should probably create a class for the options
 def load_config(command)
   config = {}
   return config unless home
@@ -158,14 +159,22 @@ def load_config(command)
     end
   end
 
-  config[command]["email"] = email
+  # ITunes::Store::Transporter uses Symbols for options
+  config[command] = config[command].inject({}) do |cfg, (k,v)| 
+    cfg[k.to_sym] = v unless k.empty? # Avoid intern empty string errors in 1.8
+    cfg 
+  end
+
+  config[command][:email] = email
   config[command]
 end
 
 def print_errors(e)
-  $stderr.puts "#{e.message.length} error(s)"
-  e.messages.each_with_index do |msg, i|
-    $stderr.puts "#{i}. #{msg}"
+  $stderr.puts "#{e.errors.length} error(s)"
+  $stderr.puts "-" * 25
+  # TODO: group by type
+  e.errors.each_with_index do |msg, i|
+    $stderr.puts "#{i+1}. #{msg}"
   end
 end
 
@@ -187,23 +196,26 @@ while ARGV.any?
   
   key, val = opt.split(/=/, 2)
   key.gsub!(/-/, "_")
+  # TODO: false, --no-xxxx
   val = true unless val
   val = val.to_i if val =~ /\A\d+\z/                         
-  options[key] = val                        
+  options[key.to_sym] = val                        
   ARGV.shift                         
 end
 
-email_options = options.delete("email")
+# Keys for this are strings
+email_options = options.delete(:email) || {}
 command_options = options.dup
-options["argv"] = ARGV
-options["commmand"] = command
+options[:argv] = ARGV.dup
+options[:command] = command
 
 begin 
+  puts "Running command '#{command}'"
   Command.execute(command, command_options, ARGV)
   send_email(email_options["success"], options)
 rescue ITunes::Store::Transporter::ExecutionError => e 
   print_errors(e)
-  options["error"] = e
+  options[:error] = e
   send_email(email_options["failure"], options)
   exit 1
 rescue ITunes::Store::Transporter::TransporterError => e

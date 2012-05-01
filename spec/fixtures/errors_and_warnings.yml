@@ -1,8 +1,8 @@
 no_error_number: |
     [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
     [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
-    [2000-01-01 00:00:00] <main> ERROR: "An error occurred while doing fun stuff"
-    [2000-01-01 00:00:00] <Some Class> ERROR: "An exception has occurred: network timeout"
+    [2000-01-01 00:00:00] <main> ERROR: "An error occurred while doing fun stuff" at Location1 (Class)
+    [2000-01-01 00:00:00] <Some Class> ERROR: "An exception has occurred: network timeout" at Location2 (Class)
     [2000-01-01 00:00:00] <main> DBG-X: About to exit
 
     Package Summary:
@@ -14,8 +14,8 @@ no_error_number: |
     [2000-01-01 00:00:00] <main> DBG-X: Returning 1
 
 with_error_number: |
-    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-4000: "This is error 4000"
-    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-5000: "This is error 5000"
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-4000: "This is error 4000" at Location1 (Class)
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-5000: "This is error 5000" at Location1 (Class)
     [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
     [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
     [2000-01-01 00:00:00] <main>  INFO: I'm outta here
@@ -28,8 +28,18 @@ with_error_number: |
 
 single_warning: |  
   [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
-  [2000-01-01 00:00:00] <main> WARN: WARNING ITMS-4010: "You've been warned!"
+  [2000-01-01 00:00:00] <main> WARN: WARNING ITMS-4010: "You've been warned!" at Location1 (Class)
   [2000-01-01 00:00:00] <main>  INFO: I'm outta here
 
   Package Summary:
     1 package(s) were successfully uploaded
+
+duplicate_errors: |
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-4000: "Error 1" at Location1 (Class)
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-5000: "Error 2" at Location2 (Class)
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-4000: "Error 1" at Location1 (Class)
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-5000: "Error 2" at Location2 (Class)
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
+    [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-7000: "Error 3" at Location3 (ClassX)
+    [2000-01-01 00:00:00] <main>  INFO: I'm outta here

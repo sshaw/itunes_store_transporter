@@ -15,7 +15,7 @@ module ITunes
 	ERROR_LINE = />\s+ERROR:\s+(.+)/
 	WARNING_LINE = />\s+WARN:\s+(.+)/
 
-	# Generic messages we want to ignore        
+	# Generic messages we want to ignore       
 	SKIP_ERRORS = [ /\boperation was not successful/i,
                         /\bunable to verify the package/i,
                         /^an error occurred while/i,
@@ -45,7 +45,13 @@ module ITunes
 	    end
 	  end
 
-          # TODO: Remove dups from both arrays
+          # Unique messages only. The block form of uniq() not available on Ruby < 1.9.2
+          [errors, warnings].each do |e|
+            e.replace(e.inject({}) do |uniq, x| 
+              uniq[x.message] = x
+              uniq
+            end.values)
+          end
 	end
 
 	def create_message(line)          
@@ -63,7 +69,9 @@ module ITunes
 	    code = nil
 	  end
 
-	  message.gsub! /^"|"$/, ""
+	  message.gsub! /^"/, ""
+          message.gsub! /"(?: at .+)?$/, ""
+
 	  TransporterMessage.new(message, code ? code.to_i : nil)
 	end
       end

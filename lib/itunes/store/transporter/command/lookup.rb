@@ -24,7 +24,7 @@ module ITunes
 
           def run(options = {})
             options[:destination] = Dir.mktmpdir
-            super
+            super 
           ensure
             FileUtils.rm_rf(options[:destination])
           end
@@ -32,10 +32,19 @@ module ITunes
           protected
           def handle_success(stdout_lines, stderr_lines, options)
             id = options[:apple_id] || options[:vendor_id]
-            # Why do we need this? We're just returning the meadata as a string!
             path = File.join(options[:destination], "#{id}.itmsp", "metadata.xml")
-            # Should probably raise an ex if it doesn't exist
-            File.read(path) if File.exists?(path)
+
+            if !File.exists?(path)
+              raise ITunes::Store::Transporter::TransporterError, "No metadata file exists at #{path}"
+            end
+
+            begin 
+              metadata = File.read(path) 
+            rescue StandardError => e
+              raise ITunes::Store::Transporter::TransporterError, "Failed to read metadata file #{path}: #{e}"
+            end
+
+            metadata
           end
 
           def mode
