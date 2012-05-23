@@ -22,7 +22,7 @@ module ITunes
           end
           
           def handle_success(stdout_lines, stderr_lines, options)
-            super =~ /version\s+(\d+(?:\.\d+)*)\Z/i ? $1 : "Unknown"
+            super =~ /version\s+(\d+(?:\.\d+)*)\b/i ? $1 : "Unknown"
           end
         end
       end

@@ -8,6 +8,40 @@ shared_examples_for "a transporter option" do |option, expected|
   end
 end
 
+shared_examples_for "a transporter option that expects a directory" do |option, expected|
+  context "when the directory exists" do
+    it_should_behave_like "a transporter option", {option => "."}, expected, "."
+  end
+
+  context "when the directory does not exist" do
+    it "raises an OptionError" do
+      lambda { subject.run(options.merge(option => "__baaaaahd_directory__")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not exist/)
+    end
+  end
+end  
+
+shared_examples_for "a boolean transporter option" do |option, expected|
+  context "when true" do 
+    it "creates the command line argument" do
+      ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected); 0 }
+      subject.run(options.merge(option => true))
+    end
+  end
+
+  context "when false" do 
+    it "does not create the command line argument" do
+      ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should_not include(*expected); 0 }
+      subject.run(options.merge(option => false))
+    end
+  end
+
+  context "when not boolean" do 
+    it "raises an OptionError" do 
+      lambda { subject.run(options.merge(option => "sshaw")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not accept/)
+    end
+  end
+end
+
 shared_examples_for "a required option" do |option|
   it "must have a value" do
     ["", nil].each do |value|
@@ -38,10 +72,8 @@ shared_examples_for "a subclass of Command::Base" do
     it "automatically sets NoPause to true" do
       ENV["PROGRAMFILES"] = "C:\\"
       shell = ITunes::Store::Transporter::Shell
-      shell.any_instance.stub(:exec) { |*arg| arg.first.should include("-WONoPause", "true") }
+      shell.any_instance.stub(:exec) { |*arg| arg.first.should include("-WONoPause", "true"); 0 }
       shell.stub(:windows? => true)
-      # TODO: This steps on the above stubbing
-      mock_output
       subject.run(options)
     end
   end
@@ -74,7 +106,7 @@ shared_examples_for "a subclass of Command::Base" do
       end
     end
 
-    # TODO: Some DRYing, maybe
+    # TODO: Needs some DRYing
     describe ":print_stdout" do
       before :each do
         @realout = $stdout
@@ -254,44 +286,20 @@ describe ITunes::Store::Transporter::Command::Upload do
       end
     end
 
-    describe ":delete_on_success" do
-      it "raises an OptionError if not boolean" do
-        lambda { subject.run(options.merge(:delete_on_success => 1)) }.should raise_exception(ITunes::Store::Transporter::OptionError)
-
-      end
-
-      context "when true" do
-        it_should_behave_like "a transporter option", {:delete_on_success => true}, "-delete"
-      end
-
-      # This should not include, probably better to say:
-      # subject.run.should include_option
-      # subject.run.should_not include_option
-      #context "when false" do
-      #  it_should_behave_like "a transporter option", {:delete_on_success => false}, "-delete"
-      #end
+    describe ":delete" do
+      it_should_behave_like "a boolean transporter option", :delete, "-delete"
     end
 
     describe ":log_history" do
-      it_should_behave_like "a transporter option", {:log_history => "."}, "-loghistory", "."
+      it_should_behave_like "a transporter option that expects a directory", :log_history, "-loghistory"
+    end
+   
+    describe ":success" do
+      it_should_behave_like "a transporter option that expects a directory", :success, "-success"
     end
 
-    describe ":delete" do
-      it_should_behave_like "a transporter option", {:delete => true}, "-delete"
-    end
-
-    describe ":on_success" do
-      context "when the directory does not exist" do
-        it "raises an OptionError" do
-          lambda { subject.run(options.merge(:on_success => "__baaaaahd_directory__")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
-        end
-      end
-
-      it_should_behave_like "a transporter option", {:on_success => "."}, "-success", "."
-    end
-
-    describe ":on_failure" do
-      it_should_behave_like "a transporter option", {:on_failure => "."}, "-failure",  "."
+    describe ":failure" do
+      it_should_behave_like "a transporter option that expects a directory", :failure, "-failure"
     end
   end
 end
@@ -301,34 +309,39 @@ describe ITunes::Store::Transporter::Command::Lookup do
   it_behaves_like "a command that accepts a shortname argument"
 
   subject { described_class.new({}) }
+
   let(:options) { create_options(:vendor_id => "X") }
   its(:mode) { should == "lookupMetadata" }
 
+  # iTMSTransporter creates a directory containing the metadata
+  before(:each) do
+    @tmpdir = Dir.mktmpdir
+    Dir.stub(:mktmpdir => @tmpdir)
+    
+    @package = File.join(@tmpdir, "#{options[:vendor_id]}.itmsp")
+    Dir.mkdir(@package)
+    
+    @metadata = "<x>Metadata</x>"
+    File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }
+    
+    mock_output
+  end
+  
+  after(:each) { FileUtils.rm_rf(@tmpdir) }
+   
   describe "#run" do
-    context "when successful" do
-
-      # iTMSTransporter creates a directory containing the metadata
-      before(:all) do
-        @tmpdir = Dir.mktmpdir
-        Dir.stub(:mktmpdir => @tmpdir)
-
-        @package = File.join(@tmpdir, "#{options[:vendor_id]}.itmsp")
-        Dir.mkdir(@package)
-
-        @metadata = "<x>Metadata</x>"
-        File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }
-
-        mock_output
-      end
-
-      after(:all) { FileUtils.rm_rf(@tmpdir) }
-
-      it "returns the metadata" do
+    context "when successful" do       
+      it "returns the metadata and deletes the temp directory used to output the metadata" do
         subject.run(options).should == @metadata
+        File.exists?(@tmpdir).should be_false
       end
 
-      it "deletes the temp directory used to output the metadata" do
-        File.exists?(@tmpdir).should be_false
+      context "when the metadata file was not created" do 
+        before { FileUtils.rm_rf(@tmpdir) }
+
+        it "raises a TransporterError" do
+          lambda { subject.run(options) }.should raise_exception(ITunes::Store::Transporter::TransporterError, /no metadata file/i)
+        end
       end
     end
   end
@@ -356,7 +369,6 @@ describe ITunes::Store::Transporter::Command::Schema do
     end
   end
 
-  # destination
   describe "options" do
     describe ":version" do
       it_should_behave_like "a transporter option", {:version => "versionX"}, "-schema",  "versionX"
@@ -431,10 +443,9 @@ describe ITunes::Store::Transporter::Command::Verify do
   end
 
   describe "options" do
-    # should not include
-    #describe ":verify_assets" do
-    #it_should_behave_like "a transporter option", {:verify_assets => false}, "-disableAssetVerification"
-    #end
+    describe ":verify_assets" do
+      it_should_behave_like "a boolean transporter option", :verify_assets, "-disableAssetVerification"
+    end
   end
 end
 

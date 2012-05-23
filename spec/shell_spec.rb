@@ -3,7 +3,7 @@ require "rbconfig"
 
 describe ITunes::Store::Transporter::Shell do  
   it "yields stdout and stderr as they become available" do 
-    ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["ruby_install_name"])
+    ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
     temp = Tempfile.new ""
     temp.write(<<-CODE)
       $stdout.puts "OUT 1"

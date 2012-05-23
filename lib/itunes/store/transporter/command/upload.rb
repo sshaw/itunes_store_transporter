@@ -15,12 +15,11 @@ module ITunes
             options.on *PACKAGE
             #options.on *SHORTNAME
             options.on *TRANSPORT
-            options.on *ON_SUCCESS
-            options.on *ON_FAILURE
+            options.on *SUCCESS
+            options.on *FAILURE
             options.on :delete, "-delete", Optout::Boolean
             options.on :rate, "-k", Fixnum    # Required if TRANSPORT is Aspera or Signiant 
             options.on :log_history, "-loghistory", Optout::Dir.exists
-            options.on :delete_on_success, "-delete", Optout::Boolean
           end
         end
       end

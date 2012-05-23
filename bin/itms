@@ -61,10 +61,22 @@ module Command
     end
   end
   
+  class Status < Base
+    def initialize(options)
+      # Let iTMSTransporter print the status
+      options[:print_stdout] = true
+      super
+    end
+
+    def execute(args = [])
+      @itms.status(args.shift)
+    end
+  end
+
   class Upload < Base
     def initialize(options)
       # These can take a while so we let the user know what's going on 
-      options[:print_stderr] = true
+      options[:print_stderr] = true unless options.include?(:print_stderr)
       super
     end
 
@@ -78,6 +90,12 @@ module Command
     def execute(args = [])
       @itms.verify(args.shift)
       puts "Package is valid"
+    end
+  end
+
+  class Version < Base
+    def execute(args = [])
+      puts @itms.version
     end
   end
 end  
@@ -186,7 +204,7 @@ end
 
 command = ARGV.shift
 abort("usage: itms command [options]") unless command
-abort("invalid command '#{command}', valid commands are: #{COMMANDS.join(', ')}") unless COMMANDS.include?(command)
+abort("invalid command '#{command}', valid commands are: #{COMMANDS.sort.join(', ')}") unless COMMANDS.include?(command)
 
 options = load_config(command)
 

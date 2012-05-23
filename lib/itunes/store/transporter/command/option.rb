@@ -10,11 +10,10 @@ module ITunes
           APPLE_ID    = [ :apple_id, "-apple_id", /\w/ ]
           SHORTNAME   = [ :shortname, "-s", /\w/ ]
           TRANSPORT   = [ :transport, "-t", %w|Aspera Signiant DAV| ]
-          ON_SUCCESS  = [ :on_success, "-success", Optout::Dir.exists ]
-          ON_FAILURE  = [ :on_failure, "-failure", Optout::Dir.exists ]         
+          SUCCESS     = [ :success, "-success", Optout::Dir.exists ]
+          FAILURE     = [ :failure, "-failure", Optout::Dir.exists ]         
           PACKAGE     = [ :package, "-f", Optout::Dir.exists.named(/\.itmsp\z/), { :required => true } ]
           DESTINATION = [ :destination, "-destination" ]          
-          DELETE_ON_SUCCESS = [ :delete_on_success, "-delete", Optout::Boolean ]
         end
       end
     end

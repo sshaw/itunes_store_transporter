@@ -22,11 +22,13 @@ module SpecHelper
   def fixture(path)
     Fixture.for(path)
   end
-  
+
+  # Set up output streams and exit code
   def mock_output(options = {})
     outputs = []
     exitcode = options[:exit] || 0
     
+    # Load a fixture for the given stream
     [:stderr, :stdout].each do |fd|
       fixture = options[fd]
       next unless fixture
