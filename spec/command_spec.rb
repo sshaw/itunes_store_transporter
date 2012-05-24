@@ -8,6 +8,10 @@ shared_examples_for "a transporter option" do |option, expected|
   end
 end
 
+shared_examples_for "a vendor_id option" do 
+  it_should_behave_like "a transporter option", { :vendor_id => "vID" }, "-vendor_id", "vID"
+end
+
 shared_examples_for "a transporter option that expects a directory" do |option, expected|
   context "when the directory exists" do
     it_should_behave_like "a transporter option", {option => "."}, expected, "."
@@ -313,12 +317,13 @@ describe ITunes::Store::Transporter::Command::Lookup do
   let(:options) { create_options(:vendor_id => "X") }
   its(:mode) { should == "lookupMetadata" }
 
-  # iTMSTransporter creates a directory containing the metadata
+  # Fake the directory iTMSTransporter creates for the metadata
   before(:each) do
     @tmpdir = Dir.mktmpdir
     Dir.stub(:mktmpdir => @tmpdir)
     
-    @package = File.join(@tmpdir, "#{options[:vendor_id]}.itmsp")
+    id = options[:vendor_id] || options[:apple_id]
+    @package = File.join(@tmpdir, "#{id}.itmsp")
     Dir.mkdir(@package)
     
     @metadata = "<x>Metadata</x>"
@@ -346,9 +351,17 @@ describe ITunes::Store::Transporter::Command::Lookup do
     end
   end
 
+  # One of these two should be requied, but they should be mutually exclusive
   describe "options" do
     describe ":vendor_id" do
+      let(:options) { create_options({:vendor_id => "vID"}) }        
+      it_should_behave_like "a vendor_id option"
     end
+
+    describe ":apple_id" do
+      let(:options) { create_options({:apple_id => "aID"}) }        
+      it_should_behave_like "a transporter option", { :apple_id => "aID" }, "-apple_id", "aID"
+     end    
   end
 end
 
@@ -410,8 +423,11 @@ describe ITunes::Store::Transporter::Command::Status do
     end
   end
 
-  #describe "options"
-  #:vendor_id
+  describe "options" do 
+    describe ":vendor_id" do 
+      it_should_behave_like "a vendor_id option"
+    end
+  end
 end
 
 describe ITunes::Store::Transporter::Command::Verify do
