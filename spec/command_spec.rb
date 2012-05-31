@@ -469,7 +469,7 @@ describe ITunes::Store::Transporter::Command::Version do
   subject { described_class.new({}) }
 
   def output_version(v)
-    ["iTMSTransporter version #{v}"]
+    ["iTMSTransporter version #{v}\n"]
   end
 
   describe "#run" do

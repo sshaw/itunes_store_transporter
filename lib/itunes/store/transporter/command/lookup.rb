@@ -1,6 +1,5 @@
-require "tempfile" 
 require "fileutils"
-require "itunes/store/transporter"
+require "itunes/store/transporter/errors"
 require "itunes/store/transporter/command"
 
 module ITunes
@@ -18,7 +17,6 @@ module ITunes
             # Optout has no way to denote this
             options.on *VENDOR_ID
             options.on *APPLE_ID
-            #options.on *SHORTNAME
             options.on *DESTINATION
           end
 

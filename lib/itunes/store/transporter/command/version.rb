@@ -1,4 +1,3 @@
-require "optout"
 require "itunes/store/transporter/command"
 
 module ITunes

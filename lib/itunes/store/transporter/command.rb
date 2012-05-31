@@ -1,5 +1,4 @@
 require "optout"
-require "childprocess"
 require "itunes/store/transporter"
 require "itunes/store/transporter/shell"
 require "itunes/store/transporter/errors"
@@ -26,6 +25,7 @@ module ITunes
             stdout_lines = []
             stderr_lines = []
            
+            # TODO: hooks
             exitcode = @shell.exec(argv) do |line, name|
               if name == :stdout
                 stdout_lines << line

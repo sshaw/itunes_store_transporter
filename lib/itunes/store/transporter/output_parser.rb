@@ -1,3 +1,4 @@
+require "itunes/store/transporter/errors"
 
 module ITunes
   module Store
@@ -15,12 +16,14 @@ module ITunes
 	ERROR_LINE = />\s+ERROR:\s+(.+)/
 	WARNING_LINE = />\s+WARN:\s+(.+)/
 
-	# Generic messages we want to ignore       
+	# Generic messages we want to ignore.
 	SKIP_ERRORS = [ /\boperation was not successful/i,
                         /\bunable to verify the package/i,
+                        /\bwill NOT be verified/,
+                        /^an error has occurred/i,
                         /^an error occurred while/i,
                         /^unknown operation/i,
-			/\bunable to authenticate/i ]
+			/\bunable to authenticate the package/i ]
 
 	##
 	# === Arguments

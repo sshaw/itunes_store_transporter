@@ -75,8 +75,8 @@ Default options and email notifications can be placed in a YAML file at <code>$H
     # Upload command
     upload:
       shortname: enc0d3rz
-      transport: aspera
-      bitrate: 750_000
+      transport: Aspera
+      rate: 750_000
       # Email notifications for the upload command
       email:
         success:

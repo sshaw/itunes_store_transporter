@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.test_files  = Dir["spec/**/*.rb"]
   s.homepage    = "http://github.com/sshaw/itunes_store_transporter"
   s.license     = "MIT"
-  s.add_dependency "childprocess", "~> 0.3.0"
+  s.add_dependency "childprocess", "~> 0.3.2"
   s.add_dependency "optout", "~> 0.0.2"
   s.add_development_dependency "rake", "~> 0.9.2"
   s.add_development_dependency "rspec", "~> 2.8.0"
