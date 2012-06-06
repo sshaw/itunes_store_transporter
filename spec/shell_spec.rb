@@ -5,7 +5,8 @@ describe ITunes::Store::Transporter::Shell do
   it "yields stdout and stderr as they become available" do 
     ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
     temp = Tempfile.new ""
-    # sleep else poll() (select) can favor the 1st FD in the read array
+    # sleep else poll() (select) can favor the 1st FD in the read array, causing the
+    # test to fail on some platforms
     temp.write(<<-CODE)
       $stdout.puts "OUT 1"
       $stdout.flush

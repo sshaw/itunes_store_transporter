@@ -46,6 +46,25 @@ that it can send email notifications and allows one to set global/per-command de
 * Optout v0.0.2 (<code>gem install optout</code>)
 * iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
 
+=== Running on Windows
+
+On Windows +iTMSTransporter+ is called via the +iTMSTransporter.CMD+ batch file. This file does not handle the
++iTMSTransporter+'s exit status correctly, causing <code>iTunes::Store::Transporter</code> to report everything as a success. 
+
+This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following does not mimic the batch file exactly):
+
+  ...
+
+  call iTMSTransporter\iTMSTransporter %*
+
+  REM Add this line:
+  set exited=%errorlevel%
+
+  cd %olddir%
+
+  REM Add this line too:
+  exit /b %exited%
+
 === Using itms
 
 <code>itms COMMAND [OPTIONS]</code>
