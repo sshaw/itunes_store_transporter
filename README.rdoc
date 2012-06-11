@@ -2,8 +2,6 @@
 
 Upload and manage your assets in the iTunes Store using the iTunes Store's Transporter (+iTMSTransporter+).
 
-*Warning* This is _alpha_ code.
-
 === Overview
 
  require "itunes/store/transporter"
