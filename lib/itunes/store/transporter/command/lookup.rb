@@ -1,3 +1,4 @@
+require "tmpdir"
 require "fileutils"
 require "itunes/store/transporter/errors"
 require "itunes/store/transporter/command"
@@ -24,7 +25,7 @@ module ITunes
             options[:destination] = Dir.mktmpdir
             super 
           ensure
-            FileUtils.rm_rf(options[:destination])
+            FileUtils.rm_rf(options[:destination]) if options[:destination]
           end
 
           protected

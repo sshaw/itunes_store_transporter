@@ -1,0 +1,4 @@
+Version 0.0.2
+--------------------
+* Bug fix: Lookup command failed to create tempdir
+* Bug fix: `itms status` passed the wrong arguments to the underlying method

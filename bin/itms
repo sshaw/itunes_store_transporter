@@ -69,7 +69,7 @@ module Command
     end
 
     def execute(args = [])
-      @itms.status(args.shift)
+      @itms.status
     end
   end
 
