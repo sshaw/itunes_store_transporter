@@ -1,4 +1,6 @@
 Version 0.0.2
 --------------------
+* `itms` allow boolean options to be set to false via --no-XXXX, e.g., --no-print-stderr
+* Bug fix: Status command ignored multiple status lines
 * Bug fix: Lookup command failed to create tempdir
 * Bug fix: `itms status` passed the wrong arguments to the underlying method

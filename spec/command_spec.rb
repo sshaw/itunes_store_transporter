@@ -407,18 +407,39 @@ describe ITunes::Store::Transporter::Command::Status do
 
   describe "#run" do
     context "when successful" do
-      it "returns the status information for the package" do
-        mock_output(:stdout => "status.vendor_id_123123", :stderr => "stderr.info")
-        subject.run(options).should == {
-          :vendor_identifier => "123123",
-          :apple_identifier => "123123",
-          :itunesconnect_status => "Not ready for sale",
-          :upload_created =>  "2000-01-01 00:00:00",
-          :upload_state => "Uploaded",
-          :upload_state_id => "1",
-          :content_state => "Irie",
-          :content_state_id => "2"
-        }
+      context "with a single status" do 
+        it "returns the status information for the package" do
+          mock_output(:stdout => "status.vendor_id_123123", :stderr => "stderr.info")
+          subject.run(options).should == {
+            :vendor_identifier => "123123",
+            :apple_identifier => "123123",
+            :itunesconnect_status => "Not ready for sale",
+            :status => [ { :upload_created =>  "2000-01-01 00:00:00",
+                           :upload_state => "Uploaded",
+                           :upload_state_id => "1",
+                           :content_state => "Irie",
+                           :content_state_id => "2" } ]
+          }
+        end
+      end
+
+      context "with multiple status" do 
+        it "returns all the status information for the package" do
+          mock_output(:stdout => "status.vendor_id_789789", :stderr => "stderr.info")
+          subject.run(options).should == {
+            :vendor_identifier => "789789",
+            :status => [ { :upload_created =>  "2000-01-01 00:00:00",
+                           :upload_state => "Uploaded",
+                           :upload_state_id => "1",
+                           :content_state => "Irie",
+                           :content_state_id => "2" },
+                         { :upload_created =>  "2000-01-02 00:00:00",
+                           :upload_state => "Some Failure",
+                           :upload_state_id => "2",
+                           :content_state => "Still Irie",
+                           :content_state_id => "3" } ]
+          }
+        end
       end
     end
   end

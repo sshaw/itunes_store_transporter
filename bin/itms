@@ -5,7 +5,7 @@ require "yaml"
 require "net/smtp"
 require "itunes/store/transporter"
 
-# Command line interface to the ITunes::Store::Transporter library. 
+# Command line interface to the ITunes::Store::Transporter library.
 # Using this is sorta like using iTMSTransporter except it can send email notifications and allows
 # one to set global/per-command defaults via $HOME/.itms
 
@@ -14,13 +14,13 @@ module Command
   class << self
     def execute(name, options, argv)
       name = name.capitalize
-      # Avoid Ruby 1.8/1.9 String/Symbol/const_defined? differences      
+      # Avoid Ruby 1.8/1.9 String/Symbol/const_defined? differences
       unless constants.include?(name) || constants.include?(name.to_sym)
         raise ArgumentError, "unknown command '#{name}'"
       end
 
       command = const_get(name).new(options)
-      command.execute(argv) 
+      command.execute(argv)
     end
   end
 
@@ -30,7 +30,7 @@ module Command
       @options = options
     end
   end
-  
+
   class Providers < Base
     def initialize(options)
       # Let iTMSTransporter print the providers
@@ -51,7 +51,7 @@ module Command
       puts "Metadata saved to #{filename}"
     end
   end
-  
+
   class Schema < Base
     def execute(args = [])
       filename = "#{@options[:version]}-#{@options[:type]}.rng"
@@ -60,22 +60,18 @@ module Command
       puts "Schema saved to #{filename}"
     end
   end
-  
-  class Status < Base
-    def initialize(options)
-      # Let iTMSTransporter print the status
-      options[:print_stdout] = true
-      super
-    end
 
+  class Status < Base
     def execute(args = [])
-      @itms.status
+      # status should return an Array of Hash, not a Hash
+      # we should print the status
+      status = @itms.status
     end
   end
 
   class Upload < Base
     def initialize(options)
-      # These can take a while so we let the user know what's going on 
+      # These can take a while so we let the user know what's going on
       options[:print_stderr] = true unless options.include?(:print_stderr)
       super
     end
@@ -98,9 +94,9 @@ module Command
       puts @itms.version
     end
   end
-end  
+end
 
-class Email  
+class Email
   Binding = Class.new do
     def initialize(options = {})
       options.each do |k, v|
@@ -109,16 +105,16 @@ class Email
       end
     end
   end
-  
+
   def initialize(config = {})
     unless config["to"]
-      raise "No email recipeints provided, you must specify at least one" 
+      raise "No email recipeints provided, you must specify at least one"
     end
 
     @config = config
   end
-  
-  def send(params = {})    
+
+  def send(params = {})
     to      = @config["to"].to_s.split /,/
     host    = @config["host"] || "localhost"
     from    = @config["from"] || "#{ENV["USER"]}@#{host}"
@@ -155,22 +151,22 @@ def load_config(command)
   path = File.join(home, RC_FILE_NAME)
   return config unless File.file?(path)
 
-  config = YAML.load_file(path) 
-  
+  config = YAML.load_file(path)
+
   # Get the global defaults. select() returns an aray on Ruby < 1.9
-  defaults = config.select { |k,v| !v.is_a?(Hash) } 
-  defaults = Hash[defaults] unless defaults.is_a?(Hash) 
+  defaults = config.select { |k,v| !v.is_a?(Hash) }
+  defaults = Hash[defaults] unless defaults.is_a?(Hash)
 
   config[command] = defaults.merge(config[command] || {})
-  
+
   # Normalize the email config
   email = Hash.new { |h, k| h[k] = {} }
 
-  %w[success failure].each do |type|  
-    email[type] = (config[command]["email"] ||= {})[type]    
+  %w[success failure].each do |type|
+    email[type] = (config[command]["email"] ||= {})[type]
     next unless email[type]
 
-    # Merge the global email options & the command's "global" options with the success/failure options 
+    # Merge the global email options & the command's "global" options with the success/failure options
     settings = (config["email"].to_a + config[command]["email"].to_a).reject { |k, v| k == "success" or k == "failure" }
     settings.each do |k, v|
       email[type][k] = email[type][k] ? "#{email[type][k]}, #{v}" : v
@@ -178,9 +174,9 @@ def load_config(command)
   end
 
   # ITunes::Store::Transporter uses Symbols for options
-  config[command] = config[command].inject({}) do |cfg, (k,v)| 
+  config[command] = config[command].inject({}) do |cfg, (k,v)|
     cfg[k.to_sym] = v unless k.empty? # Avoid intern empty string errors in 1.8
-    cfg 
+    cfg
   end
 
   config[command][:email] = email
@@ -208,17 +204,22 @@ abort("invalid command '#{command}', valid commands are: #{COMMANDS.sort.join(',
 
 options = load_config(command)
 
-while ARGV.any?   
+while ARGV.any?
   opt = ARGV.first.dup
   break unless opt.sub!(/\A--(?=\w)/, "")
-  
+
   key, val = opt.split(/=/, 2)
   key.gsub!(/-/, "_")
-  # TODO: false, --no-xxxx
-  val = true unless val
-  val = val.to_i if val =~ /\A\d+\z/                         
-  options[key.to_sym] = val                        
-  ARGV.shift                         
+
+  if val
+    val = val.to_i if val =~ /\A\d+\z/
+  else
+    # Boolean option                       
+    val = key.sub!(/\Ano_(?=\w)/, "") ? false : true
+  end
+
+  options[key.to_sym] = val
+  ARGV.shift
 end
 
 # Keys for this are strings
@@ -227,11 +228,11 @@ command_options = options.dup
 options[:argv] = ARGV.dup
 options[:command] = command
 
-begin 
-  puts "Running command '#{command}'"
+begin
+  puts "Running command '#{command}'\n\n"
   Command.execute(command, command_options, ARGV)
   send_email(email_options["success"], options)
-rescue ITunes::Store::Transporter::ExecutionError => e 
+rescue ITunes::Store::Transporter::ExecutionError => e
   print_errors(e)
   options[:error] = e
   send_email(email_options["failure"], options)
@@ -240,4 +241,3 @@ rescue ITunes::Store::Transporter::TransporterError => e
   $stderr.puts e
   exit 2
 end
-

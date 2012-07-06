@@ -9,3 +9,21 @@ vendor_id_123123: |
   Upload state id:        1
   Content state:  Irie
   Content state id:       2
+
+vendor_id_789789: |
+  Vendor identifier:      789789
+
+  -------------------------Status Info-------------------------
+  Upload created: 2000-01-01 00:00:00
+  Upload state:   Uploaded
+  Upload state id:        1
+  Content state:  Irie
+  Content state id:       2
+
+  -------------------------Status Info #2-------------------------
+  Upload created: 2000-01-02 00:00:00
+  Upload state:   Some Failure
+  Upload state id:        2
+  Content state:  Still Irie
+  Content state id:       3
+

@@ -17,17 +17,31 @@ module ITunes
           protected 
           def handle_success(stdout_lines, stderr_lines, options) 
             status = {}
-            stdout_lines.each do |line|
+            while line = stdout_lines.shift
               next unless line =~ /\A\s*\w/
-              key, value = line.split(/:\s+/, 2).map(&:strip)
-              key.gsub!(/\s+/, "_")
-              key.downcase!
-              status[key.to_sym] = value
+              if line =~ /\A--+/
+                entry = {}
+                while line = stdout_lines.shift
+                  break unless line =~ /\A\s*\w/
+                  key, value = parse_line(line)
+                  entry[key] = value
+                end
+                (status[:status] ||= []) << entry
+              else
+                key, value = parse_line(line)
+                status[key] = value
+              end
             end
             status
-          end
-        end        
+          end             
 
+          def parse_line(line)
+            key, value = line.split(/:\s+/, 2).map(&:strip)
+            key.gsub!(/\s+/, "_")
+            key.downcase!
+            [key, value]
+          end
+        end                   
       end
     end
   end
