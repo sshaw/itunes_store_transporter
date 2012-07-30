@@ -137,7 +137,7 @@ class Email
 end
 
 COMMANDS = ITunes::Store::Transporter.instance_methods(false).map(&:to_s)
-RC_FILE_NAME = ".itms"
+CONFIG_FILE_NAME = ".itms"
 
 def home
   ENV["HOME"] || ENV["USERPROFILE"]
@@ -145,13 +145,13 @@ end
 
 # Should probably create a class for the options
 def load_config(command)
-  config = {}
-  return config unless home
+  return {} unless home
 
-  path = File.join(home, RC_FILE_NAME)
-  return config unless File.file?(path)
+  path = File.join(home, CONFIG_FILE_NAME)
+  return {} unless File.file?(path)
 
   config = YAML.load_file(path)
+  return {} unless config
 
   # Get the global defaults. select() returns an aray on Ruby < 1.9
   defaults = config.select { |k,v| !v.is_a?(Hash) }
@@ -202,7 +202,7 @@ command = ARGV.shift
 abort("usage: itms command [options]") unless command
 abort("invalid command '#{command}', valid commands are: #{COMMANDS.sort.join(', ')}") unless COMMANDS.include?(command)
 
-options = load_config(command)
+options = ARGV.delete("--no-config") ? {} : load_config(command)
 
 while ARGV.any?
   opt = ARGV.first.dup
@@ -214,7 +214,7 @@ while ARGV.any?
   if val
     val = val.to_i if val =~ /\A\d+\z/
   else
-    # Boolean option                       
+    # Boolean option
     val = key.sub!(/\Ano_(?=\w)/, "") ? false : true
   end
 
