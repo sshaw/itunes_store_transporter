@@ -10,7 +10,7 @@ module ITunes
         #
         class Status < Mode
           def initialize(*config)
-            super
+            super 
             options.on *VENDOR_ID
           end
 
@@ -18,7 +18,7 @@ module ITunes
           def handle_success(stdout_lines, stderr_lines, options) 
             status = {}
             while line = stdout_lines.shift
-              next unless line =~ /\A\s*\w/
+              next unless line =~ /\S+/
               if line =~ /\A--+/
                 entry = {}
                 while line = stdout_lines.shift
@@ -39,7 +39,7 @@ module ITunes
             key, value = line.split(/:\s+/, 2).map(&:strip)
             key.gsub!(/\s+/, "_")
             key.downcase!
-            [key, value]
+            [key.to_sym, value]
           end
         end                   
       end

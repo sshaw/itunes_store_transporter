@@ -72,7 +72,7 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 
 ==== Config file
 
-Default options and email notifications can be placed in a YAML file at <code>$HOME/.itms</code>. 
+Default options and email notifications can be placed in a YAML file at <code>$HOME/.itms</code>. To skip loading the config file use the `--no-config` option. 
 
     # Global command defaults
     path: /usr/bin
