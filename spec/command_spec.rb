@@ -3,7 +3,7 @@ require "stringio"
 
 shared_examples_for "a transporter option" do |option, expected|
   it "creates the correct command line argument" do
-    ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected); 0 }
+    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
     subject.run(options.merge(option))
   end
 end
@@ -27,14 +27,14 @@ end
 shared_examples_for "a boolean transporter option" do |option, expected|
   context "when true" do 
     it "creates the command line argument" do
-      ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected); 0 }
+      ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
       subject.run(options.merge(option => true))
     end
   end
 
   context "when false" do 
     it "does not create the command line argument" do
-      ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should_not include(*expected); 0 }
+      ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should_not include(*expected); 0 }
       subject.run(options.merge(option => false))
     end
   end
@@ -76,7 +76,7 @@ shared_examples_for "a subclass of Command::Base" do
     it "automatically sets NoPause to true" do
       ENV["PROGRAMFILES"] = "C:\\"
       shell = ITunes::Store::Transporter::Shell
-      shell.any_instance.stub(:exec) { |*arg| arg.first.should include("-WONoPause", "true"); 0 }
+      shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include("-WONoPause", "true"); 0 }
       shell.stub(:windows? => true)
       subject.run(options)
     end
@@ -327,14 +327,14 @@ describe ITunes::Store::Transporter::Command::Lookup do
     Dir.mkdir(@package)
     
     @metadata = "<x>Metadata</x>"
-    File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }
-    
-    mock_output
+    File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }   
   end
   
   after(:each) { FileUtils.rm_rf(@tmpdir) }
-   
+
   describe "#run" do
+    before { mock_output }
+
     context "when successful" do       
       it "returns the metadata and deletes the temp directory used to output the metadata" do
         subject.run(options).should == @metadata

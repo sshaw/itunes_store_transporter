@@ -63,8 +63,7 @@ module Command
 
   class Status < Base
     def execute(args = [])
-      # status should return an Array of Hash, not a Hash
-      # we should print the status
+      # TODO: print the status ourself
       status = @itms.status
     end
   end
