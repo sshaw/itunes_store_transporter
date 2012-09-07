@@ -115,6 +115,7 @@ Default options and email notifications can be placed in a YAML file at <code>$H
 
 === More Info
 
+* Web Based GUI: http://github.com/sshaw/itunes_store_transporter_web
 * Source Code: http://github.com/sshaw/itunes_store_transporter
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 

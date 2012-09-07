@@ -8,7 +8,7 @@ shared_examples_for "a transporter option" do |option, expected|
   end
 end
 
-shared_examples_for "a vendor_id option" do 
+shared_examples_for "a vendor_id option" do
   it_should_behave_like "a transporter option", { :vendor_id => "vID" }, "-vendor_id", "vID"
 end
 
@@ -22,25 +22,25 @@ shared_examples_for "a transporter option that expects a directory" do |option, 
       lambda { subject.run(options.merge(option => "__baaaaahd_directory__")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not exist/)
     end
   end
-end  
+end
 
 shared_examples_for "a boolean transporter option" do |option, expected|
-  context "when true" do 
+  context "when true" do
     it "creates the command line argument" do
       ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
       subject.run(options.merge(option => true))
     end
   end
 
-  context "when false" do 
+  context "when false" do
     it "does not create the command line argument" do
       ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should_not include(*expected); 0 }
       subject.run(options.merge(option => false))
     end
   end
 
-  context "when not boolean" do 
-    it "raises an OptionError" do 
+  context "when not boolean" do
+    it "raises an OptionError" do
       lambda { subject.run(options.merge(option => "sshaw")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not accept/)
     end
   end
@@ -166,7 +166,7 @@ shared_examples_for "a subclass of Command::Base" do
           e.errors.should have(2).items
 
           # just check one
-          e.errors[0].should be_a(ITunes::Store::Transporter::TransporterMessage) 
+          e.errors[0].should be_a(ITunes::Store::Transporter::TransporterMessage)
           e.errors[0].code.should == 9000
           e.errors[0].message.should match("Your audio of screwed up!")
           e.errors[1].code.should == 4009
@@ -297,7 +297,7 @@ describe ITunes::Store::Transporter::Command::Upload do
     describe ":log_history" do
       it_should_behave_like "a transporter option that expects a directory", :log_history, "-loghistory"
     end
-   
+
     describe ":success" do
       it_should_behave_like "a transporter option that expects a directory", :success, "-success"
     end
@@ -321,27 +321,27 @@ describe ITunes::Store::Transporter::Command::Lookup do
   before(:each) do
     @tmpdir = Dir.mktmpdir
     Dir.stub(:mktmpdir => @tmpdir)
-    
+
     id = options[:vendor_id] || options[:apple_id]
     @package = File.join(@tmpdir, "#{id}.itmsp")
     Dir.mkdir(@package)
-    
+
     @metadata = "<x>Metadata</x>"
-    File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }   
+    File.open(File.join(@package, "metadata.xml"), "w") { |io| io.write(@metadata) }
   end
-  
+
   after(:each) { FileUtils.rm_rf(@tmpdir) }
 
   describe "#run" do
     before { mock_output }
 
-    context "when successful" do       
+    context "when successful" do
       it "returns the metadata and deletes the temp directory used to output the metadata" do
         subject.run(options).should == @metadata
         File.exists?(@tmpdir).should be_false
       end
 
-      context "when the metadata file was not created" do 
+      context "when the metadata file was not created" do
         before { FileUtils.rm_rf(@tmpdir) }
 
         it "raises a TransporterError" do
@@ -354,14 +354,14 @@ describe ITunes::Store::Transporter::Command::Lookup do
   # One of these two should be requied, but they should be mutually exclusive
   describe "options" do
     describe ":vendor_id" do
-      let(:options) { create_options({:vendor_id => "vID"}) }        
+      let(:options) { create_options({:vendor_id => "vID"}) }
       it_should_behave_like "a vendor_id option"
     end
 
     describe ":apple_id" do
-      let(:options) { create_options({:apple_id => "aID"}) }        
+      let(:options) { create_options({:apple_id => "aID"}) }
       it_should_behave_like "a transporter option", { :apple_id => "aID" }, "-apple_id", "aID"
-     end    
+     end
   end
 end
 
@@ -407,7 +407,7 @@ describe ITunes::Store::Transporter::Command::Status do
 
   describe "#run" do
     context "when successful" do
-      context "with a single status" do 
+      context "with a single status" do
         it "returns the status information for the package" do
           mock_output(:stdout => "status.vendor_id_123123", :stderr => "stderr.info")
           subject.run(options).should == {
@@ -423,7 +423,7 @@ describe ITunes::Store::Transporter::Command::Status do
         end
       end
 
-      context "with multiple status" do 
+      context "with multiple status" do
         it "returns all the status information for the package" do
           mock_output(:stdout => "status.vendor_id_789789", :stderr => "stderr.info")
           subject.run(options).should == {
@@ -444,8 +444,8 @@ describe ITunes::Store::Transporter::Command::Status do
     end
   end
 
-  describe "options" do 
-    describe ":vendor_id" do 
+  describe "options" do
+    describe ":vendor_id" do
       it_should_behave_like "a vendor_id option"
     end
   end
