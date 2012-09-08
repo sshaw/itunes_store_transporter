@@ -1,5 +1,8 @@
 = iTunes::Store::Transporter
 
+{<img src="https://secure.travis-ci.org/sshaw/itunes_store_transporter.png"/>}[http://travis-ci.org/sshaw/itunes_store_transporter]
+{<img src="https://codeclimate.com/badge.png"/>}[https://codeclimate.com/github/sshaw/itunes_store_transporter]
+
 Upload and manage your assets in the iTunes Store using the iTunes Store's Transporter (+iTMSTransporter+).
 
 === Overview
@@ -115,9 +118,9 @@ Default options and email notifications can be placed in a YAML file at <code>$H
 
 === More Info
 
-* Web Based GUI: http://github.com/sshaw/itunes_store_transporter_web
-* Source Code: http://github.com/sshaw/itunes_store_transporter
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
+* Source Code: http://github.com/sshaw/itunes_store_transporter
+* Web Based GUI: http://github.com/sshaw/itunes_store_transporter_web
 
 === Author
 
