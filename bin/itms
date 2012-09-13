@@ -62,9 +62,29 @@ module Command
   end
 
   class Status < Base
+    def initialize(options)
+      # It's preferable to let iTMSTransporter output the status but unlike other commands
+      # it summarizes errors on stdout. This results in redundant error messages since we summarize
+      # errors too. To avoid this, and keep our error messages consistant, we reprint the status below.
+      options[:print_stdout] = false unless options.include?(:print_stdout)
+      super
+    end
+
     def execute(args = [])
-      # TODO: print the status ourself
-      status = @itms.status
+      field = lambda { |f| f.to_s.capitalize.gsub("_", " ") }
+
+      info = @itms.status
+      info.each do |k, v|
+        printf "%-21s: %s\n", field.call(k), v
+      end
+
+      info[:status].each_with_index do |status, i|
+        pos = info[:status].size - i
+        puts "\n#{'-' * 15} Status ##{pos} #{'-' * 15}"
+        status.each do |k, v|
+          printf "%-18s %s\n", field.call(k), v
+        end
+      end
     end
   end
 

@@ -16,7 +16,7 @@ module SpecHelper
   end
 
   def expect_shell_args(*expected)
-    ITunes::Store::Transporter::Shell.any_instance.stub(:exec) { |*arg| arg.first.should include(*expected) }
+    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected) }
   end
 
   def fixture(path)
