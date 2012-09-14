@@ -70,22 +70,27 @@ module Command
       super
     end
 
-    def execute(args = [])
-      field = lambda { |f| f.to_s.capitalize.gsub("_", " ") }
-
+    def execute(args = [])      
       info = @itms.status
       info.each do |k, v|
-        printf "%-21s: %s\n", field.call(k), v
+        next if k == :status
+        say(k, v, 21)
       end
 
       info[:status].each_with_index do |status, i|
         pos = info[:status].size - i
-        puts "\n#{'-' * 15} Status ##{pos} #{'-' * 15}"
+        puts "\n#{'-' * 15} Upload ##{pos} #{'-' * 15}"
         status.each do |k, v|
-          printf "%-18s %s\n", field.call(k), v
+          say(k, v, 18)
         end
       end
     end
+
+    def say(k, v, width)
+      k = k.to_s.capitalize.gsub("_", " ")
+      printf "%-#{width}s %s\n", k, v
+    end
+
   end
 
   class Upload < Base

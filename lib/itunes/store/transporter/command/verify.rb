@@ -20,6 +20,12 @@ module ITunes
           end
 
           protected
+          def create_transporter_options(optz)
+            # Incude the option if false
+            optz[:verify_assets] = !optz[:verify_assets] if optz.include?(:verify_assets)
+            super
+          end
+
           # Verify mode returns 0 if there are no packages to verify but will emit an error message about the lack of packages
           def handle_success(stdout_lines, stderr_lines, options)
             parser = Transporter::OutputParser.new(stderr_lines)
@@ -34,4 +40,3 @@ module ITunes
     end
   end
 end
-

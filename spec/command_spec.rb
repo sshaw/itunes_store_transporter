@@ -3,7 +3,7 @@ require "stringio"
 
 shared_examples_for "a transporter option" do |option, expected|
   it "creates the correct command line argument" do
-    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
+    expect_shell_args(*expected)
     subject.run(options.merge(option))
   end
 end
@@ -27,7 +27,7 @@ end
 shared_examples_for "a boolean transporter option" do |option, expected|
   context "when true" do
     it "creates the command line argument" do
-      ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
+      expect_shell_args(*expected)
       subject.run(options.merge(option => true))
     end
   end
@@ -76,7 +76,7 @@ shared_examples_for "a subclass of Command::Base" do
     it "automatically sets NoPause to true" do
       ENV["PROGRAMFILES"] = "C:\\"
       shell = ITunes::Store::Transporter::Shell
-      shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include("-WONoPause", "true"); 0 }
+      expect_shell_args("-WONoPause", "true")
       shell.stub(:windows? => true)
       subject.run(options)
     end
@@ -469,9 +469,9 @@ describe ITunes::Store::Transporter::Command::Verify do
         end
       end
 
-      # If no packages were verfied it exits with 0 but emits an error message
       context "with errors" do
         it "raises an ExecutionError" do
+          # If no packages were verfied it exits with 0 but emits an error message
           mock_output(:exit => 0, :stderr => "stderr.errors");
           lambda { subject.run(options) }.should raise_exception(ITunes::Store::Transporter::ExecutionError)
         end
@@ -481,7 +481,19 @@ describe ITunes::Store::Transporter::Command::Verify do
 
   describe "options" do
     describe ":verify_assets" do
-      it_should_behave_like "a boolean transporter option", :verify_assets, "-disableAssetVerification"
+      context "when true" do
+        it "does not create the command line argument" do
+          ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should_not include("-disableAssetVerification"); 0 }
+          subject.run(options.merge(:verify_assets => true))
+        end
+      end
+
+      context "when false" do
+        it "creates the command line argument" do
+          expect_shell_args("-disableAssetVerification")
+          subject.run(options.merge(:verify_assets => false))
+        end
+      end
     end
   end
 end
