@@ -96,14 +96,14 @@ Default options and email notifications can be placed in a YAML file at <code>$H
     upload:
       shortname: enc0d3rz
       transport: Aspera
-      rate: 750_000
+      rate: 750000
       # Email notifications for the upload command
       email:
         success:
           cc: assets@example.com
           subject: iTunes Upload <%= @apple_id %>
           message: |        
-            <% @username > uploaded it using <%= @transport %>
+            <%= @username %> uploaded it using <%= @transport %>
 
             Bye!
         failure:

@@ -48,12 +48,11 @@ module ITunes
 	    end
 	  end
 
-          # Unique messages only. The block form of uniq() not available on Ruby < 1.9.2
+          # Unique messages only. The block form of uniq() is not available on Ruby < 1.9.2
           [errors, warnings].each do |e|
-            e.replace(e.inject({}) do |uniq, x| 
-              uniq[x.message] = x
-              uniq
-            end.values)
+            next if e.empty?
+            uniq = {}
+            e.replace(e.select { |m| uniq.include?(m.message) ? false : uniq[m.message] = true })             
           end
 	end
 

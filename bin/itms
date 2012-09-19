@@ -90,7 +90,6 @@ module Command
       k = k.to_s.capitalize.gsub("_", " ")
       printf "%-#{width}s %s\n", k, v
     end
-
   end
 
   class Upload < Base
