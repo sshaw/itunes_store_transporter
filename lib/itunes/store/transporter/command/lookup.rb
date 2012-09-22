@@ -34,13 +34,13 @@ module ITunes
             path = File.join(options[:destination], "#{id}.itmsp", "metadata.xml")
 
             if !File.exists?(path)
-              raise ITunes::Store::Transporter::TransporterError, "No metadata file exists at #{path}"
+              raise TransporterError, "No metadata file exists at #{path}"
             end
 
             begin 
               metadata = File.read(path) 
             rescue StandardError => e
-              raise ITunes::Store::Transporter::TransporterError, "Failed to read metadata file #{path}: #{e}"
+              raise TransporterError, "Failed to read metadata file #{path}: #{e}"
             end
 
             metadata

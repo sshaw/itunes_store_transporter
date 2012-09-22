@@ -28,9 +28,9 @@ module ITunes
 
           # Verify mode returns 0 if there are no packages to verify but will emit an error message about the lack of packages
           def handle_success(stdout_lines, stderr_lines, options)
-            parser = Transporter::OutputParser.new(stderr_lines)
+            parser = OutputParser.new(stderr_lines)
             if parser.errors.any?
-              raise ITunes::Store::Transporter::ExecutionError.new(parser.errors, 0)
+              raise ExecutionError.new(parser.errors, 0)
             else
               true
             end

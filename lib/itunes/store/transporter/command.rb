@@ -62,16 +62,16 @@ module ITunes
           end
 
           def handle_error(stdout_lines, stderr_lines, options, exitcode)
-            parser = Transporter::OutputParser.new(stderr_lines)
+            parser = OutputParser.new(stderr_lines)
             errors = parser.errors.any? ? parser.errors : [ TransporterMessage.new(stderr_lines.join) ]
-            raise ITunes::Store::Transporter::ExecutionError.new(errors, exitcode)
+            raise ExecutionError.new(errors, exitcode)
           end
 
           def create_transporter_options(optz)
             optz[:windows] = "true" if Transporter::Shell.windows?
             options.argv(optz)
           rescue Optout::OptionError => e
-            raise ITunes::Store::Transporter::OptionError, e.message
+            raise OptionError, e.message
           end
         end
 

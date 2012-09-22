@@ -1,4 +1,5 @@
 require "childprocess"
+require "itunes/store/transporter/errors"
 
 module ITunes
   module Store
@@ -35,6 +36,8 @@ module ITunes
         end
         
         def exec(argv, &block)
+          raise ArgumentError, "block required" unless block_given?
+
           begin 
             process = ChildProcess.build(path, *argv)
             
@@ -54,7 +57,7 @@ module ITunes
 
             poll(stdout[0], stderr[0], &block)          
           rescue ChildProcess::Error, SystemCallError => e
-            raise ITunes::Store::Transporter::TransporterError, e.message
+            raise TransporterError, e.message
           ensure
             process.wait if process.alive?
             [ stdout, stderr ].flatten.each { |io| io.close if !io.closed? }
@@ -68,6 +71,7 @@ module ITunes
           read = [ stdout, stderr ]
           
           loop do
+            # TODO: Not working on jruby
             if ready = select(read, nil, nil, 1)
               ready.each do |set|
                 next unless set.any?

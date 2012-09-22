@@ -12,13 +12,13 @@ Gem::Specification.new do |s|
   s.authors     = ["Skye Shaw"]
   s.email       = "sshaw@lucas.cis.temple.edu"
   s.executables  << "itms"
-  s.files       = Dir["lib/**/*.rb", "README.rdoc"]
-  s.test_files  = Dir["spec/**/*.rb"]
+  s.test_files  = Dir["spec/**/*.*"] 
+  s.extra_rdoc_files = %w[README.rdoc Changes]
+  s.files       = Dir["lib/**/*.rb"] + s.test_files + s.extra_rdoc_files
   s.homepage    = "http://github.com/sshaw/itunes_store_transporter"
   s.license     = "MIT"
   s.add_dependency "childprocess", "~> 0.3.2"
   s.add_dependency "optout", "~> 0.0.2"
   s.add_development_dependency "rake", "~> 0.9.2"
-  s.add_development_dependency "rspec", "~> 2.9"
-  s.extra_rdoc_files = ["README.rdoc"]
+  s.add_development_dependency "rspec", "~> 2.9", "< 3"
 end
