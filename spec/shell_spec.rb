@@ -1,7 +1,7 @@
 require "spec_helper"
 require "rbconfig"
 
-describe ITunes::Store::Transporter::Shell do  
+describe ITunes::Store::Transporter::Shell do
   it "yields stdout and stderr as they become available" do
     ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
     temp = Tempfile.new ""
@@ -34,13 +34,13 @@ describe ITunes::Store::Transporter::Shell do
 
     output.should == expect
   end
- 
+
   describe "#exec" do
     it "requires a block" do
       lambda { described_class.new.exec([]) }.should raise_exception(ArgumentError, "block required")
     end
   end
-    
+
   context "when on Windows" do
     before(:all) { ENV["PROGRAMFILES"] = "C:\\" }
 

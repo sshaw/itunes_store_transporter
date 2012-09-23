@@ -1,4 +1,3 @@
-require "itunes/store/transporter/command"
 require "itunes/store/transporter/command/lookup"
 require "itunes/store/transporter/command/providers"
 require "itunes/store/transporter/command/schema"

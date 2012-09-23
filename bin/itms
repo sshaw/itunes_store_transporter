@@ -140,7 +140,7 @@ class Email
   def send(params = {})
     to      = @config["to"].to_s.split /,/
     host    = @config["host"] || "localhost"
-    from    = @config["from"] || "#{ENV["USER"]}@#{host}"
+    from    = @config["from"] || "#{user}@#{host}"
     params  = params.merge(@config)
     message = ::ERB.new(build_template).def_class(Binding).new(params).result
 
@@ -151,6 +151,10 @@ class Email
   end
 
   protected
+  def user
+    ENV["USER"] || ENV["USERNAME"]
+  end
+
   def build_template
     %w[to from subject cc bcc].inject("") do |t, key|
       t << "#{key}: #{@config[key]}\n" if @config[key]

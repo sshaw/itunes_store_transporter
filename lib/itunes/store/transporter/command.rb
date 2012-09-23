@@ -1,5 +1,4 @@
 require "optout"
-require "itunes/store/transporter"
 require "itunes/store/transporter/shell"
 require "itunes/store/transporter/errors"
 require "itunes/store/transporter/output_parser"
@@ -68,7 +67,7 @@ module ITunes
           end
 
           def create_transporter_options(optz)
-            optz[:windows] = "true" if Transporter::Shell.windows?
+            optz[:windows] = "true" if Shell.windows?
             options.argv(optz)
           rescue Optout::OptionError => e
             raise OptionError, e.message

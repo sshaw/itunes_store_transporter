@@ -1,13 +1,12 @@
 v0.0.2    2012-09-22
 --------------------
 Enhancements:
- * `itms` added --no-config option
- * `itms` allow boolean options to be set to false via --no-XXXX, e.g., --no-print-stderr
+* `itms` added --no-config option
+* `itms` allow boolean options to be set to false via --no-XXXX, e.g., --no-print-stderr
 
-Bug Fixes:
+Bug Fixes: 
 * `itms status` passed the wrong arguments to the underlying method
 * `itms` failed when the config file was empty
 * Verify command :verify_assets => true would disable asset verification
 * Status command ignored multiple status lines
 * Lookup command failed to create tempdir
-
