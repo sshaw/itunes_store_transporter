@@ -131,7 +131,7 @@ class Email
 
   def initialize(config = {})
     unless config["to"]
-      raise "No email recipeints provided, you must specify at least one"
+      raise "No email recipients provided, you must specify at least one"
     end
 
     @config = config
