@@ -123,22 +123,22 @@ Default options and email notifications can be placed in a YAML file at <code>$H
       rate: 750000
       # Email notifications for the upload command
       email:
-	success:
-	  cc: assets@example.com
-	  subject: iTunes Upload <%= @apple_id %>
-	  message: |
-	    <%= @username %> uploaded it using <%= @transport %>
+        success:
+          cc: assets@example.com
+          subject: iTunes Upload <%= @apple_id %>
+          message: |
+            <%= @username %> uploaded it using <%= @transport %>
 
-	    Bye!
-	failure:
-	  to: support@example.com
-	  subject: Upload Failed!
-	  message: |
-	    Here's the problem:
+            Bye!
+        failure:
+          to: support@example.com
+          subject: Upload Failed!
+          message: |
+            Here's the problem:
 
-	    <%= @error %>
+            <%= @error %>
 
-	    Fix it!
+            Fix it!
 
 As you can see, command options are turned into template variables.
 
