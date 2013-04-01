@@ -35,7 +35,7 @@ supports the following operations:
 * Upload packages
 * Validate packages
 * Retrieve status information
-* Lookup package metadata
+* Lookup package metadata and video assets
 * List providers
 * Retrieve iTunes metadata schemas
 
