@@ -10,8 +10,8 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
  require "itunes/store/transporter"
 
  itms = iTunes::Store::Transporter.new(:username => "CouchCaster",
-				       :shortname => "bigtimer",
-				       :password => "w3c@llYoU!")
+                                       :shortname => "bigtimer",
+                                       :password => "w3c@llYoU!")
 
  itms.upload("/path/to/yourpackage.itmsp")
  metadata = itms.lookup(:apple_id => "yourpackage")
@@ -77,7 +77,7 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 
 The lookup command differs slightly from the gem by allowing you to download low-quality copies of the assets associated with the looked up metadata.
 These assets are created by Apple (at the time of this writing, Apple only allows you to download full and preview assets, there is nothing
-in +itms+ that would prevent you from downloading other types of assets when they're supported).
+in +itms+ that would prevent you from downloading other types of assets if/when they're supported).
 
 For example, to lookup the metadata for package +X123+ and download low-quality copies of all the assets:
 
