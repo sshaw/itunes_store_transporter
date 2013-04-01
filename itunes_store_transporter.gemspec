@@ -1,4 +1,5 @@
 require File.expand_path("../lib/itunes/store/transporter/version", __FILE__)
+require "date"
 
 Gem::Specification.new do |s|
   s.name        = "itunes_store_transporter"
