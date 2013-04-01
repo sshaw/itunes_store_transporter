@@ -10,8 +10,8 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
  require "itunes/store/transporter"
 
  itms = iTunes::Store::Transporter.new(:username => "CouchCaster",
-                                       :shortname => "bigtimer",
-                                       :password => "w3c@llYoU!")
+				       :shortname => "bigtimer",
+				       :password => "w3c@llYoU!")
 
  itms.upload("/path/to/yourpackage.itmsp")
  metadata = itms.lookup(:apple_id => "yourpackage")
@@ -73,9 +73,33 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 * +COMMAND+ - The command (<code>iTunes::Store::Transporter</code> method) to run
 * +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix.
 
+==== Lookup command
+
+The lookup command differs slightly from the gem by allowing you to download low-quality copies of the assets associated with the looked up metadata.
+These assets are created by Apple (at the time of this writing, Apple only allows you to download full and preview assets, there is nothing
+in +itms+ that would prevent you from downloading other types of assets when they're supported).
+
+For example, to lookup the metadata for package +X123+ and download low-quality copies of all the assets:
+
+  itms lookup --vendor-id=X123 --assets
+
+To download a particular asset type just provide its name:
+  
+  itms lookup --vendor-id=X123 --assets=preview
+
+If there are multiple territories this will download the preview assets for each of them. To only download assets in a given territory or territories use:
+
+  itms lookup --vendor-id=X123 --assets=preview:US
+  itms lookup --vendor-id=X123 --assets=preview:US:BR
+
+If necessary multiple asset types can be seperated by a comma:
+
+  itms lookup --vendor-id=X123 --assets=full,preview
+  itms lookup --vendor-id=X123 --assets=full,preview:MX
+
 ==== Config file
 
-Default options and email notifications can be placed in a YAML file at <code>$HOME/.itms</code>. To skip loading the config file use the <code>--no-config</code>` option.
+Default options and email notifications can be placed in a YAML file at <code>$HOME/.itms</code>. To skip loading the config file use the <code>--no-config</code> option.
 
     # Global command defaults
     path: /usr/bin
@@ -99,22 +123,22 @@ Default options and email notifications can be placed in a YAML file at <code>$H
       rate: 750000
       # Email notifications for the upload command
       email:
-        success:
-          cc: assets@example.com
-          subject: iTunes Upload <%= @apple_id %>
-          message: |
-            <%= @username %> uploaded it using <%= @transport %>
+	success:
+	  cc: assets@example.com
+	  subject: iTunes Upload <%= @apple_id %>
+	  message: |
+	    <%= @username %> uploaded it using <%= @transport %>
 
-            Bye!
-        failure:
-          to: support@example.com
-          subject: Upload Failed!
-          message: |
-            Here's the problem:
+	    Bye!
+	failure:
+	  to: support@example.com
+	  subject: Upload Failed!
+	  message: |
+	    Here's the problem:
 
-            <%= @error %>
+	    <%= @error %>
 
-            Fix it!
+	    Fix it!
 
 As you can see, command options are turned into template variables.
 

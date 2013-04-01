@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 
 require "erb"
+require "uri"
 require "yaml"
 require "net/smtp"
+require "net/http"
+require "rexml/document"
 require "itunes/store/transporter"
 
 # Command line interface to the ITunes::Store::Transporter library.
@@ -44,11 +47,84 @@ module Command
   end
 
   class Lookup < Base
+    def initialize(options)
+      super
+      @assets  = options.delete(:assets)
+      @assets  = @assets.split(",").map { |x| x.split(":").grep(/\w/) } if String === @assets
+      @package = "#{options[:apple_id] || options[:vendor_id]}.itmsp"
+      Dir.mkdir(@package)
+    end
+
     def execute(args = [])
-      filename = "#{@options[:apple_id] || @options[:vendor_id]}.xml"
       metadata = @itms.lookup
-      File.open(filename, "w") { |f| f.write(metadata) }
-      puts "Metadata saved to #{filename}"
+      File.open("#@package/metadata.xml", "w") { |f| f.write(metadata) }
+      puts "Metadata saved in #@package"
+      retrieve_assets(metadata) if @assets
+    end
+
+    def retrieve_assets(metadata)
+      doc = REXML::Document.new(metadata)
+      assets = build_asset_list(doc)
+
+      if assets.none?
+        puts "No assets found"
+      else
+        assets.each do |asset|
+          puts "Downloading #{asset[:type]} asset #{asset[:filename]}"
+          uri = URI.parse(asset[:url])
+
+          Net::HTTP.start(uri.host, uri.port) do |http|
+            File.open("#@package/#{asset[:filename]}", "w") do |io|
+              http.request_get(uri.path) do |res|
+                raise res.message unless Net::HTTPSuccess === res
+                res.read_body do |data|
+                  io.write data
+                end
+              end
+            end
+          end
+        end
+      end
+    rescue => e
+      raise "Asset retrieval failed: #{e}"
+    end
+
+    def build_asset_list(doc)
+      asset_info = lambda do |xpath|
+        doc.get_elements(xpath).map do |e|
+          file = {}
+          file[:url] = e.get_text("//*[ @key = 'proxy-encode-url' ]").to_s
+          type = e.attribute("type")
+          file[:type] = type.value if type
+          file[:filename] = e.get_text(".//data_file[ @role = 'source' ]/file_name").to_s
+          file[:territories] = e.get_elements(".//territory").map { |t| t.get_text.to_s }
+          file
+        end
+      end
+
+      files = []
+      if @assets == true
+        files = asset_info["//asset[ .//*[ @key = 'proxy-encode-url' ]]"]
+      else
+        @assets.each do |asset|
+          type, regions = asset.shift, asset
+          regions.clear if type == "full" # There's only one full asset per package
+
+          xpath = "//asset[ @type = '#{type}'"
+          if regions.any?
+            xpath << " and (%s)" % regions.map { |code| ".//territory = '#{code}'" }.join(" or ")
+          end
+          xpath << "and .//*[ @key = 'proxy-encode-url' ]]"
+
+          info = asset_info[xpath]
+          unknown = regions - info.map { |file| file[:territories] }.flatten
+          raise "No #{type} asset for #{unknown.join ", "}" if unknown.any?
+
+          files.concat info
+        end
+      end
+
+      files
     end
   end
 
@@ -57,7 +133,6 @@ module Command
       filename = "#{@options[:version]}-#{@options[:type]}.rng"
       schema = @itms.schema
       File.open(filename, "w") { |f| f.write(schema) }
-      puts "Schema saved to #{filename}"
     end
   end
 
@@ -70,7 +145,7 @@ module Command
       super
     end
 
-    def execute(args = [])      
+    def execute(args = [])
       info = @itms.status
       info.each do |k, v|
         next if k == :status
@@ -264,7 +339,7 @@ rescue ITunes::Store::Transporter::ExecutionError => e
   options[:error] = e
   send_email(email_options["failure"], options)
   exit 1
-rescue ITunes::Store::Transporter::TransporterError => e
+rescue => e
   $stderr.puts e
   exit 2
 end
