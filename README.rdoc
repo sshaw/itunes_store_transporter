@@ -144,14 +144,14 @@ As you can see, command options are turned into template variables.
 
 === More Info
 
-* Docs: http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.0.2/README_rdoc.html
+* Docs: http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.0/README_rdoc.html
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 * Source Code: http://github.com/sshaw/itunes_store_transporter
 * Web Based GUI: http://github.com/sshaw/itunes_store_transporter_web
 
 === Author
 
-Skye Shaw [sshaw AT lucas.cis.temple.edu]
+Skye Shaw [sshaw AT gmail.com]
 
 === License
 

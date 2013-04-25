@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     Apple Store, validate them, retrieve status information, lookup metadata, and more!
   DESC
   s.authors     = ["Skye Shaw"]
-  s.email       = "sshaw@lucas.cis.temple.edu"
+  s.email       = "skye.shaw@gmail.com"
   s.executables  << "itms"
   s.test_files  = Dir["spec/**/*.*"] 
   s.extra_rdoc_files = %w[README.rdoc Changes]
