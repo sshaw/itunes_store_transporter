@@ -2,7 +2,7 @@ require "itunes/store/transporter/command"
 
 module ITunes
   module Store
-    class Transporter
+    module Transporter
       module Command
         
         ##

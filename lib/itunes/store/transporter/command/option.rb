@@ -2,7 +2,7 @@ require "optout"
 
 module ITunes
   module Store
-    class Transporter
+    module Transporter
       module Command
         module Option
           # Common command options

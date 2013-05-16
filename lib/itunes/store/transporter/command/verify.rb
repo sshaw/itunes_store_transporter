@@ -5,7 +5,7 @@ require "itunes/store/transporter/output_parser"
 
 module ITunes
   module Store
-    class Transporter
+    module Transporter
       module Command            # :nodoc:
 
         ##

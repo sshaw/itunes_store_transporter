@@ -6,7 +6,7 @@ require "itunes/store/transporter/command/option"
 
 module ITunes
   module Store
-    class Transporter
+    module Transporter
       module Command            # :nodoc: all
 
         class Base

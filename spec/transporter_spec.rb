@@ -39,7 +39,7 @@ shared_examples_for "a transporter method with a package argument" do
 end
 
 
-describe ITunes::Store::Transporter do
+describe ITunes::Store::Transporter::ITMSTransporter do
   let(:options) { {} }
 
   describe "#new" do

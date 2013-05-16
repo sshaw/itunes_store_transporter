@@ -1,7 +1,7 @@
 
 module ITunes
   module Store      
-    class Transporter
+    module Transporter
 
       class TransporterError < StandardError; end
       class OptionError < TransporterError; end

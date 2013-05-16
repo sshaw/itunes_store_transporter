@@ -1,6 +1,6 @@
 module ITunes
   module Store
-    class Transporter
+    module Transporter
       VERSION = "0.1.0"
     end
   end

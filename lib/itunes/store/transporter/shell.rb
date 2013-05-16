@@ -3,7 +3,7 @@ require "itunes/store/transporter/errors"
 
 module ITunes
   module Store
-    class Transporter
+    module Transporter
 
       class Shell  # :nodoc:
         attr :path
