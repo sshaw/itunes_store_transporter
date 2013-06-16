@@ -1,3 +1,9 @@
+v0.1.1    2013-XX-XX
+--------------------
+Changes: 
+* post_install_message letting Windows users know they need to modify iTMSTransporter.CMD 
+* Transporter is now a module, new() returns an instance of ITMSTransporter
+
 v0.1.0    2013-04-23
 --------------------
 Changes:
