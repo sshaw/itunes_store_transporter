@@ -48,8 +48,9 @@ module Command
 
   class Lookup < Base
     def initialize(options)
-      super
       @assets  = options.delete(:assets)
+      # Must call *after* we delete the assets option
+      super
       @assets  = @assets.split(",").map { |x| x.split(":").grep(/\w/) } if String === @assets
       @package = "#{options[:apple_id] || options[:vendor_id]}.itmsp"
       Dir.mkdir(@package)
@@ -75,8 +76,8 @@ module Command
 
           Net::HTTP.start(uri.host, uri.port) do |http|
             File.open("#@package/#{asset[:filename]}", "w") do |io|
-              http.request_get(uri.path) do |res|
-                raise res.message unless Net::HTTPSuccess === res
+              http.request_get(uri.to_s) do |res|
+                raise "HTTP response #{res.message} (#{res.code})" unless Net::HTTPSuccess === res
                 res.read_body do |data|
                   io.write data
                 end
@@ -238,7 +239,7 @@ class Email
   end
 end
 
-COMMANDS = ITunes::Store::Transporter.instance_methods(false).map(&:to_s)
+COMMANDS = ITunes::Store::Transporter::ITMSTransporter.instance_methods(false).map(&:to_s)
 CONFIG_FILE_NAME = ".itms"
 
 def home
