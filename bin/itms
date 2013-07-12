@@ -75,7 +75,7 @@ module Command
           uri = URI.parse(asset[:url])
 
           Net::HTTP.start(uri.host, uri.port) do |http|
-            File.open("#@package/#{asset[:filename]}", "w") do |io|
+            File.open("#@package/#{asset[:filename]}", "wb") do |io|
               http.request_get(uri.to_s) do |res|
                 raise "HTTP response #{res.message} (#{res.code})" unless Net::HTTPSuccess === res
                 res.read_body do |data|
