@@ -94,7 +94,7 @@ module Command
       asset_info = lambda do |xpath|
         doc.get_elements(xpath).map do |e|
           file = {}
-          file[:url] = e.get_text("//*[ @key = 'proxy-encode-url' ]").to_s
+          file[:url] = e.get_text(".//*[ @key = 'proxy-encode-url' ]").to_s
           type = e.attribute("type")
           file[:type] = type.value if type
           file[:filename] = e.get_text(".//data_file[ @role = 'source' ]/file_name").to_s
