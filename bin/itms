@@ -104,6 +104,7 @@ module Command
       end
 
       files = []
+      warned = false
       if @assets == true
         files = asset_info["//asset[ .//*[ @key = 'proxy-encode-url' ]]"]
       else
@@ -113,9 +114,13 @@ module Command
 
           xpath = "//asset[ @type = '#{type}'"
           if regions.any?
+            if !warned && RUBY_VERSION.start_with?("1.8")
+              warn "WARNING: you're using Ruby 1.8, which has known problems looking up assets by region, expect problems!"
+              warned = true
+            end
             xpath << " and (%s)" % regions.map { |code| ".//territory = '#{code}'" }.join(" or ")
           end
-          xpath << "and .//*[ @key = 'proxy-encode-url' ]]"
+          xpath << " and .//*[ @key = 'proxy-encode-url' ]]"
 
           info = asset_info[xpath]
           unknown = regions - info.map { |file| file[:territories] }.flatten
