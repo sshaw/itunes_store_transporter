@@ -11,6 +11,8 @@ module ITunes
         EXE_NAME = "iTMSTransporter"
         WINDOWS_EXE = "#{EXE_NAME}.CMD"
         DEFAULT_UNIX_PATH = "/usr/local/itms/bin/#{EXE_NAME}"
+        DEFAULT_OSX_PATHS = ["/Developer/Applications/Utilities/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}",
+                             "/Applications/Xcode.app/Contents/Applications/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}"]
 
         class << self
           def windows?
@@ -18,44 +20,51 @@ module ITunes
             # can crow when it receives a Windows path.
             ChildProcess.windows? || ChildProcess.os == :cygwin
           end
-          
+
+          def osx?
+            ChildProcess.os == :macosx
+          end
+
           def default_path
-            if windows?
-              # The Transporter installer prefers x86
-              # But... I think ruby normalizes this to just PROGRAMFILES
-              root = ENV["PROGRAMFILES(x86)"] || ENV["PROGRAMFILES"] # Need C:\ in case?
-              File.join(root, "itms", WINDOWS_EXE)
-            else
-              DEFAULT_UNIX_PATH
+            case
+              when windows?
+                # The Transporter installer prefers x86
+                # But... I think ruby normalizes this to just PROGRAMFILES
+                root = ENV["PROGRAMFILES(x86)"] || ENV["PROGRAMFILES"] # Need C:\ in case?
+                File.join(root, "itms", WINDOWS_EXE)
+              when osx?
+                DEFAULT_OSX_PATHS.find { |path| File.exist?(path) } || DEFAULT_UNIX_PATH
+              else
+                DEFAULT_UNIX_PATH
             end
           end
         end
-        
+
         def initialize(path = nil)
           @path = path || self.class.default_path
         end
-        
+
         def exec(argv, &block)
           raise ArgumentError, "block required" unless block_given?
 
-          begin 
+          begin
             process = ChildProcess.build(path, *argv)
-            
+
             stdout = IO.pipe
             stderr = IO.pipe
-            
+
             stdout[1].sync = true
             process.io.stdout = stdout[1]
 
             stderr[1].sync = true
             process.io.stderr = stderr[1]
-            
+
             process.start
 
             stdout[1].close
             stderr[1].close
 
-            poll(stdout[0], stderr[0], &block)          
+            poll(stdout[0], stderr[0], &block)
           rescue ChildProcess::Error, SystemCallError => e
             raise TransporterError, e.message
           ensure
@@ -65,27 +74,27 @@ module ITunes
 
           process.exit_code
         end
-        
+
         private
         def poll(stdout, stderr)
           read = [ stdout, stderr ]
-          
+
           loop do
             # TODO: Not working on jruby
             if ready = select(read, nil, nil, 1)
               ready.each do |set|
                 next unless set.any?
-                
+
                 set.each do |io|
                   if io.eof?
                     read.delete(io)
                     next
                   end
-                  
+
                   name = io == stdout ? :stdout : :stderr
                   yield(io.gets, name)
                 end
-                
+
               end
             end
             break unless read.any?

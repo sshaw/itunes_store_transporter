@@ -45,14 +45,31 @@ describe ITunes::Store::Transporter::Shell do
     before(:all) { ENV["PROGRAMFILES"] = "C:\\" }
 
     it "selects the Windows executable" do
-      described_class.stub(:windows? => true)
+      described_class.stub(:windows? => true, :osx? => false)
       described_class.new.path.should match /#{described_class::WINDOWS_EXE}\Z/
     end
   end
 
-  context "when on anything but Windows" do
+  context "when on OS X" do
+    before { described_class.stub(:windows? => false, :osx? => true) }
+
     it "selects the right executable" do
-      described_class.stub(:windows? => false)
+      exe = described_class::DEFAULT_OSX_PATHS.first
+      File.stub(:exist? => true)
+      described_class.new.path.should == exe
+    end
+
+    context "and no OS X specific executable is found" do
+      it "defaults to the *nix executable" do
+        File.stub(:exist? => false)
+        described_class.new.path.should match /#{described_class::DEFAULT_UNIX_PATH}\Z/
+      end
+    end
+  end
+
+  context "when not on Windows or OS X" do
+    it "selects the right executable" do
+      described_class.stub(:windows? => false, :osx? => false)
       described_class.new.path.should match /#{described_class::EXE_NAME}\Z/
     end
   end
