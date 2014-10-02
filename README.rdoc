@@ -29,7 +29,7 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
 
 === Description
 
-iTunes::Store::Transporter is a wrapper around Apple's +iTMSTransporter+ program. It currently
+<code>iTunes::Store::Transporter</code> is a wrapper around Apple's +iTMSTransporter+ program. It currently
 supports the following operations:
 
 * Upload packages
@@ -44,8 +44,14 @@ that it can send email notifications and allows one to set global/per-command de
 
 === Requirements
 
-* Optout v0.0.2 (<code>gem install optout</code>)
+* Optout (<code>gem install optout</code>)
 * iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
+
+=== Locating iTMSTransporter
+
+If the +iTMSTransporter+ cannot be found in {one your platform's known locations}[https://github.com/sshaw/itunes_store_transporter/tree/master/lib/itunes/store/transporter/shell.rb#L28-L40] you must specify it when creating an instance of <code>iTunes::Store::Transporter</code> via {the <code>:path</code> option}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html#method-c-new-label-Options].
+
+If you're using the bundled +itms+ command you must use its +--path+ option or specify the path in the itms config file. See the +itms+ section for more info.
 
 === Running on Windows
 
@@ -72,6 +78,11 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 
 * +COMMAND+ - The command (<code>iTunes::Store::Transporter</code> method) to run
 * +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix.
+
+==== Username, Password, Short Name
+
+Most all commands require your username and password, some require a shortname. These can be specified on the command line
+via the +--username+, +--password+, and +--shortname+ options, or via an +itms+ config file. See the config file section below.
 
 ==== Lookup command
 
