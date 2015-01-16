@@ -8,7 +8,7 @@ task :default => "spec"
 
 task :parse_output do
 
-  print_results = -> (name, results) do
+  print_results = lambda do |name, results|
     print "#{name}:"
 
     if results.none?
