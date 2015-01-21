@@ -13,8 +13,8 @@ module ITunes
         attr :errors
         attr :warnings
 
-        ERROR_LINE = />\s+ERROR:\s+(.+)/
-        WARNING_LINE = />\s+WARN:\s+(.+)/
+        ERROR_LINE = /<main>\s+ERROR:\s+(.+)/
+        WARNING_LINE = /<main>\s+WARN:\s+(.+)/
 
         # Generic messages we want to ignore.
         SKIP_ERRORS = [ /\boperation was not successful/i,
