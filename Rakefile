@@ -24,6 +24,6 @@ task :parse_output do
   end
 
   parser = ITunes::Store::Transporter::OutputParser.new(STDIN.readlines)
-  print_results.("Errors", parser.errors)
-  print_results.("Warnings", parser.warnings)
+  print_results.call("Errors", parser.errors)
+  print_results.call("Warnings", parser.warnings)
 end
