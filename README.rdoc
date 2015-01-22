@@ -74,10 +74,20 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 
 === Using itms
 
-<code>itms COMMAND [OPTIONS]</code>
+<code>itms COMMAND [OPTIONS] [PACKAGE]</code>
 
-* +COMMAND+ - The command (<code>iTunes::Store::Transporter</code> method) to run
-* +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix.
+* +COMMAND+ - The command to run, which can be any one of {the <code>iTunes::Store::Transporter</code> methods}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html]
+* +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in a strict long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix. For more info see {each command's options}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html].
+* +PACKAGE+ - The package or directory to operate on, if required by the command
+
+<b>Note that options with a value must contain the equals character</b> (<code>"="</code>).
+The format is <code>--option=value</code> and not <code>--option value</code>.
+
+==== Examples:
+
+    itms upload --username=sshaw --password=w3cAllYoU --transport=aspera a_package.itmsp
+    itms version
+    itms status --no-print-stderr --vendor-id=X123123 --username=sshaw --password=sekr3t_ --shortname=ss
 
 ==== Username, Password, Short Name
 
@@ -95,7 +105,7 @@ For example, to lookup the metadata for package +X123+ and download low-quality 
   itms lookup --vendor-id=X123 --assets
 
 To download a particular asset type just provide its name:
-  
+
   itms lookup --vendor-id=X123 --assets=preview
 
 If there are multiple territories this will download the preview assets for each of them. To only download assets in a given territory or territories use:
