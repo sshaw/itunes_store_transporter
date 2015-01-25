@@ -17,7 +17,8 @@ module ITunes
             options.on *SUCCESS
             options.on *FAILURE
             options.on :delete, "-delete", Optout::Boolean
-            options.on :rate, "-k", Integer  # Required if TRANSPORT is Aspera or Signiant 
+            options.on :rate, "-k", Integer  # Required if TRANSPORT is Aspera or Signiant
+            options.on :streams, "-numStreams", Integer  # Only valid if TRANSPORT is Signiant
             options.on :log_history, "-loghistory", Optout::Dir.exists
           end
         end

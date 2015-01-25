@@ -83,7 +83,7 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 <b>Note that options with a value must contain the equals character</b> (<code>"="</code>).
 The format is <code>--option=value</code> and not <code>--option value</code>.
 
-==== Examples:
+==== Examples
 
     itms upload --username=sshaw --password=w3cAllYoU --transport=aspera a_package.itmsp
     itms version

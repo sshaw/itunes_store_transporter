@@ -4,18 +4,18 @@ module ITunes
   module Store
     module Transporter
       module Command            # :nodoc:
-        
+
         ##
         # Retrieve the status of a previously uploaded package
         #
         class Status < Mode
           def initialize(*config)
-            super 
+            super
             options.on *VENDOR_ID
           end
 
-          protected 
-          def handle_success(stdout_lines, stderr_lines, options) 
+          protected
+          def handle_success(stdout_lines, stderr_lines, options)
             status = {}
             while line = stdout_lines.shift
               next unless line =~ /\S+/
@@ -33,7 +33,7 @@ module ITunes
               end
             end
             status
-          end             
+          end
 
           def parse_line(line)
             key, value = line.split(/:\s+/, 2).map(&:strip)
@@ -41,7 +41,7 @@ module ITunes
             key.downcase!
             [key.to_sym, value]
           end
-        end                   
+        end
       end
     end
   end
