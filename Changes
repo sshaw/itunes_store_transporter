@@ -1,7 +1,15 @@
+v0.1.2    2015-03-07
+--------------------
+Changes:
+* Only parse errors from the main iTMSTransporter thread
+
+Enhancements:
+* Look for the iTMSTransporter at known locations on OS X
+
 v0.1.1    2013-08-14
 --------------------
-Changes: 
-* Added post_install_message letting Windows users know they need to modify iTMSTransporter.CMD 
+Changes:
+* Added post_install_message letting Windows users know they need to modify iTMSTransporter.CMD
 * Transporter is now a module, new() returns an instance of ITMSTransporter
 
 Bug fixes:
@@ -22,7 +30,7 @@ Enhancements:
 * `itms` added --no-config option
 * `itms` allow boolean options to be set to false via --no-XXXX, e.g., --no-print-stderr
 
-Bug Fixes: 
+Bug Fixes:
 * `itms status` passed the wrong arguments to the underlying method
 * `itms` failed when the config file was empty
 * Verify command :verify_assets => true would disable asset verification
