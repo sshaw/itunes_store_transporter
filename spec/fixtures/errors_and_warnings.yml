@@ -2,7 +2,7 @@ no_error_number: |
     [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
     [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
     [2000-01-01 00:00:00] <main> ERROR: "An error occurred while doing fun stuff" at Location1 (Class)
-    [2000-01-01 00:00:00] <Some Class> ERROR: "An exception has occurred: network timeout" at Location2 (Class)
+    [2000-01-01 00:00:00] <main> ERROR: "An exception has occurred: network timeout" at Location2 (Class)
     [2000-01-01 00:00:00] <main> DBG-X: About to exit
 
     Package Summary:
@@ -26,7 +26,7 @@ with_error_number: |
         ERROR ITMS-4000 "This is error 4000"
         ERROR ITMS-5000 "This is error 5000"
 
-single_warning: |  
+single_warning: |
   [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
   [2000-01-01 00:00:00] <main> WARN: WARNING ITMS-4010: "You've been warned!" at Location1 (Class)
   [2000-01-01 00:00:00] <main>  INFO: I'm outta here
@@ -43,3 +43,16 @@ duplicate_errors: |
     [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
     [2000-01-01 00:00:00] <main> ERROR: ERROR ITMS-7000: "Error 3" at Location3 (ClassX)
     [2000-01-01 00:00:00] <main>  INFO: I'm outta here
+
+error_from_main_and_class: |
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is doing something fun
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
+    [2000-01-01 00:00:00] <in.some.Class> ERROR: "An exception has occurred in.some.Class: network timeout"
+    [2000-01-01 00:00:00] <main>  INFO: Transporter is still doing some fun stuff
+    [2000-01-01 00:00:00] <main>  ERROR: Another error has occurred
+    [2000-01-01 00:00:00] <main> DBG-X: About to exit
+
+    Package Summary:
+
+      1 package was uploaded successfully:
+    	/home/sshaw/123123123.itmsp
