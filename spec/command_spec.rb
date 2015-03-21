@@ -195,6 +195,7 @@ shared_examples_for "a transporter mode" do
 end
 
 shared_examples_for "a command that requires a package argument" do
+  # TODO: it_should_behave_like "a transporter option", {:package => "xxx"}, "f", "xxx"
   it_should_behave_like "a required option", :package
 
   context "when a directory" do
@@ -208,16 +209,48 @@ shared_examples_for "a command that requires a package argument" do
 
     it "must end in .itmsp" do
       options = create_options(:package => @tmpdir)
-      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /must match/i)
+      expect { subject.run(options) }.to raise_error(ITunes::Store::Transporter::OptionError, /must match/i)
 
       mock_output(:exit => 0)
       options = create_options(:package => @pkgdir)
-      lambda { subject.run(options) }.should_not raise_error
+      expect { subject.run(options) }.not_to raise_error
     end
 
     it "must exist" do
       options = create_options(:package => File.join(@tmpdir, "badpkg.itmsp"))
-      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /does not exist/i)
+      expect { subject.run(options) }.to raise_error(ITunes::Store::Transporter::OptionError, /does not exist/i)
+    end
+
+    context "when it does not end in .itmsp" do
+      before do
+        @realerr = $stderr
+        $stderr = StringIO.new
+      end
+
+      after { $stderr = @realerr }
+
+      it "prints a deprecation warning to stderr" do
+        options = create_options(:package => @tmpdir)
+        subject.run(options) rescue nil
+        expect($stderr.string).to match(/^WARNING:/)
+      end
+
+      context "and :batch is true" do
+        before do
+          mock_output
+          @options = create_options(:package => @tmpdir, :batch => true)
+        end
+
+        it "does not raise an exception" do
+          expect { subject.run(@options) }.to_not raise_error
+        end
+
+        it "does not print a deprecation warning to stderr" do
+          options = create_options(:package => @tmpdir)
+          subject.run(@options)
+          expect($stderr.string).not_to match(/^WARNING:/)
+        end
+      end
     end
   end
 

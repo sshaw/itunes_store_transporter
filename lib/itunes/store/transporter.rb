@@ -9,6 +9,7 @@ require "itunes/store/transporter/command/version"
 
 module ITunes
   module Store
+    # See ITunes::Store::Transporter::ITMSTransporter
     module Transporter
       def self.new(options = nil)
         ITMSTransporter.new(options)

@@ -9,12 +9,12 @@ module ITunes
       module Command
 
         ##
-        # Retrieve the metadata for a previously delivered package.  
+        # Retrieve the metadata for a previously delivered package.
         #
         class Lookup < Mode
           def initialize(*config)
             super
-            # These 2 are mutually exclusive, and one is required. 
+            # These 2 are mutually exclusive, and one is required.
             # Optout has no way to denote this
             options.on *VENDOR_ID
             options.on *APPLE_ID
@@ -23,12 +23,13 @@ module ITunes
 
           def run(options = {})
             options[:destination] = Dir.mktmpdir
-            super 
+            super
           ensure
             FileUtils.rm_rf(options[:destination]) if options[:destination]
           end
 
           protected
+
           def handle_success(stdout_lines, stderr_lines, options)
             id = options[:apple_id] || options[:vendor_id]
             path = File.join(options[:destination], "#{id}.itmsp", "metadata.xml")
@@ -37,8 +38,8 @@ module ITunes
               raise TransporterError, "No metadata file exists at #{path}"
             end
 
-            begin 
-              metadata = File.read(path) 
+            begin
+              metadata = File.read(path)
             rescue StandardError => e
               raise TransporterError, "Failed to read metadata file #{path}: #{e}"
             end

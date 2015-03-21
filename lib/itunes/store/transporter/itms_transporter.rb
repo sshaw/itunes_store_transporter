@@ -143,6 +143,7 @@ module ITunes
         # [:delete (Boolean)] Delete the package if the upload succeeds. Defaults to +false+.
         # [:log_history (String)] Write an +iTMSTransporter+ log to this directory. Off by default.
         # [:streams (Integer)] Number of data streams to use. Optional, only used with +Signiant+
+        # [:batch (Boolean)] Allow batch uploads if +package+ is a regular directory. Optional, defaults to +false+ but <b>will default to +true+ in <code>v0.2.0</code></b>.
         #
         # === Errors
         #
@@ -169,6 +170,7 @@ module ITunes
         #
         # === Options
         #
+        # [:batch (Boolean)] Allow batch verification if +package+ is a regular directory. Optional, defaults to +false+ but <b>will default to +true+ in <code>v0.2.0</code></b>.
         # [:verify_assets (Boolean)] If false the assets will not be verified. Defaults to +true+.
         #
         # === Errors

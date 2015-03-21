@@ -10,8 +10,8 @@ shared_examples_for "a transporter method" do
       :print_stdout => true
     }
 
-    s = stub(command)
-    s.should_receive(:run)
+    s = double(command)
+    allow(s).to receive(:run)
 
     klass = ITunes::Store::Transporter::Command.const_get(command)
     klass.should_receive(:new).with(config, defaults).and_return(s)
@@ -20,7 +20,7 @@ shared_examples_for "a transporter method" do
   end
 end
 
-shared_examples_for "a transporter method without a package argument" do 
+shared_examples_for "a transporter method without a package argument" do
   it_behaves_like "a transporter method"
 
   it "executes the underlying command" do
@@ -29,7 +29,7 @@ shared_examples_for "a transporter method without a package argument" do
   end
 end
 
-shared_examples_for "a transporter method with a package argument" do 
+shared_examples_for "a transporter method with a package argument" do
   it_behaves_like "a transporter method"
 
   it "executes the underlying command" do
@@ -94,13 +94,13 @@ describe ITunes::Store::Transporter::ITMSTransporter do
     let(:method) { :verify }
     let(:command) { "Verify" }
 
-    it_behaves_like "a transporter method with a package argument"  
+    it_behaves_like "a transporter method with a package argument"
   end
 
   describe "#version" do
     let(:method) { :version }
     let(:command) { "Version" }
 
-    it_behaves_like "a transporter method without a package argument"  
+    it_behaves_like "a transporter method without a package argument"
   end
 end

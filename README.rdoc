@@ -1,7 +1,7 @@
 = iTunes::Store::Transporter
 
-{<img src="https://secure.travis-ci.org/sshaw/itunes_store_transporter.png"/>}[http://travis-ci.org/sshaw/itunes_store_transporter]
-{<img src="https://codeclimate.com/github/sshaw/itunes_store_transporter.png" />}[https://codeclimate.com/github/sshaw/itunes_store_transporter]
+{<img src="https://secure.travis-ci.org/sshaw/itunes_store_transporter.svg"/>}[http://travis-ci.org/sshaw/itunes_store_transporter]
+{<img src="https://codeclimate.com/github/sshaw/itunes_store_transporter.svg" />}[https://codeclimate.com/github/sshaw/itunes_store_transporter]
 
 Upload and manage your assets in the iTunes Store using the iTunes Store's Transporter (+iTMSTransporter+).
 

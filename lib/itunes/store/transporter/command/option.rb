@@ -11,9 +11,8 @@ module ITunes
           SHORTNAME   = [ :shortname, "-s", /\w/ ]
           TRANSPORT   = [ :transport, "-t", %w|Aspera Signiant DAV| ]
           SUCCESS     = [ :success, "-success", Optout::Dir.exists ]
-          FAILURE     = [ :failure, "-failure", Optout::Dir.exists ]         
-          PACKAGE     = [ :package, "-f", Optout::Dir.exists.named(/\.itmsp\z/), { :required => true } ]
-          DESTINATION = [ :destination, "-destination" ]          
+          FAILURE     = [ :failure, "-failure", Optout::Dir.exists ]
+          DESTINATION = [ :destination, "-destination" ]
         end
       end
     end

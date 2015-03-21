@@ -43,6 +43,7 @@ module ITunes
           end
 
           protected
+
           attr :config
           attr :default_options
 
@@ -86,6 +87,8 @@ module ITunes
             options.on *SHORTNAME
           end
 
+          protected
+
           def create_transporter_options(optz)
             optz[:mode] = mode
             super
@@ -96,6 +99,41 @@ module ITunes
           end
         end
 
+        class BatchMode < Mode
+          BatchOption = Optout::Option.create(:package, "-f", :required => true, :validator => Optout::Dir.exists)
+          PackageOption = Optout::Option.create(:package, "-f", :required => true, :validator => Optout::Dir.exists.named(/\.itmsp\z/))
+
+          protected
+
+          def create_transporter_options(optz)
+            batch   = optz.delete(:batch)
+            package = optz.delete(:package)
+
+            argv = super
+
+            klass = if batch == true
+              BatchOption
+            else
+              if package !~ /\.itmsp\z/
+                warn "WARNING: In version 0.2.0 directories without an itmsp extension be treated as a batch upload. " \
+                     "This will result in all child directories with an itmsp extension to be uploaded. " \
+                     "To prevent this behavior in 0.2.0 you must set the :batch option to false"
+              end
+
+              PackageOption
+            end
+
+            opt = klass.new(package)
+
+            begin
+              opt.validate!
+            rescue Optout::OptionError => e
+              raise OptionError, e.message
+            end
+
+            argv.concat(opt.to_a)
+          end
+        end
       end
     end
   end

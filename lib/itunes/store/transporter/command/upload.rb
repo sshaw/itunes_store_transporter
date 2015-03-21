@@ -9,10 +9,9 @@ module ITunes
         ##
         # Upload a package to the iTunes Store
         #
-        class Upload < Mode
+        class Upload < BatchMode
           def initialize(*config)
             super
-            options.on *PACKAGE
             options.on *TRANSPORT
             options.on *SUCCESS
             options.on *FAILURE

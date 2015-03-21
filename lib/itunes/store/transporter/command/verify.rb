@@ -11,11 +11,9 @@ module ITunes
         ##
         # Validate the contents of a package's metadata and assets.
         #
-
-        class Verify < Mode
+        class Verify < BatchMode
           def initialize(*config)
             super
-            options.on *PACKAGE
             options.on :verify_assets, "-disableAssetVerification", Optout::Boolean  # If false verify MD only no assets
           end
 
