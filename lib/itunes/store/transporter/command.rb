@@ -115,9 +115,9 @@ module ITunes
               BatchOption
             else
               if package !~ /\.itmsp\z/
-                warn "WARNING: In version 0.2.0 directories without an itmsp extension be treated as a batch upload. " \
+                warn "WARNING: In version 0.3.0 directories without an itmsp extension be treated as a batch upload. " \
                      "This will result in all child directories with an itmsp extension to be uploaded. " \
-                     "To prevent this behavior in 0.2.0 you must set the :batch option to false"
+                     "To prevent this behavior in 0.3.0 you must set the :batch option to false"
               end
 
               PackageOption
