@@ -6,6 +6,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 task :default => "spec"
 
+desc "parse iTMSTransporter output given via stdin"
 task :parse_output do
 
   print_results = lambda do |name, results|
