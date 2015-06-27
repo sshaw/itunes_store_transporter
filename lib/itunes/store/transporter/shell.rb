@@ -11,8 +11,11 @@ module ITunes
         EXE_NAME = "iTMSTransporter"
         WINDOWS_EXE = "#{EXE_NAME}.CMD"
         DEFAULT_UNIX_PATH = "/usr/local/itms/bin/#{EXE_NAME}"
-        DEFAULT_OSX_PATHS = ["/Developer/Applications/Utilities/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}",
-                             "/Applications/Xcode.app/Contents/Applications/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}"]
+
+        OSX_APPLICATION_LOADER_PATHS = [
+          "/Applications/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}",
+          "/Developer/Applications/Utilities/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}"
+        ]
 
         class << self
           def windows?
@@ -33,7 +36,17 @@ module ITunes
                 root = ENV["PROGRAMFILES(x86)"] || ENV["PROGRAMFILES"] # Need C:\ in case?
                 File.join(root, "itms", WINDOWS_EXE)
               when osx?
-                DEFAULT_OSX_PATHS.find { |path| File.exist?(path) } || DEFAULT_UNIX_PATH
+                paths = OSX_APPLICATION_LOADER_PATHS.dup
+                root  = `xcode-select --print-path`.chomp rescue ""
+
+                if !root.empty?
+                  ["/Applications/Application Loader.app/Contents/MacOS/itms/bin/#{EXE_NAME}",
+                   "/Applications/Application Loader.app/Contents/itms/bin/#{EXE_NAME}"].each do |path|
+                    paths << File.join(root, "..", path)
+                  end
+                end
+
+                paths.find { |path| File.exist?(path) } || DEFAULT_UNIX_PATH
               else
                 DEFAULT_UNIX_PATH
             end
