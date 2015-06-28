@@ -32,12 +32,12 @@ describe ITunes::Store::Transporter::Shell do
       output << [ stream, line.chomp! ]
     end
 
-    output.should == expect
+    expect(output).to eq expect
   end
 
   describe "#exec" do
     it "requires a block" do
-      lambda { described_class.new.exec([]) }.should raise_exception(ArgumentError, "block required")
+      expect { described_class.new.exec([]) }.to raise_exception(ArgumentError, "block required")
     end
   end
 
@@ -45,32 +45,37 @@ describe ITunes::Store::Transporter::Shell do
     before(:all) { ENV["PROGRAMFILES"] = "C:\\" }
 
     it "selects the Windows executable" do
-      described_class.stub(:windows? => true, :osx? => false)
-      described_class.new.path.should match /#{described_class::WINDOWS_EXE}\Z/
+      allow(described_class).to receive(:windows?).and_return(true)
+      allow(described_class).to receive(:osx?).and_return(false)
+      expect(described_class.new.path).to match /#{described_class::WINDOWS_EXE}\z/
     end
   end
 
   context "when on OS X" do
-    before { described_class.stub(:windows? => false, :osx? => true) }
+    before do
+      allow(described_class).to receive(:windows?).and_return(false)
+      allow(described_class).to receive(:osx?).and_return(true)
+    end
 
     it "selects the right executable" do
-      exe = described_class::DEFAULT_OSX_PATHS.first
-      File.stub(:exist? => true)
-      described_class.new.path.should == exe
+      exe = described_class::OSX_APPLICATION_LOADER_PATHS.first
+      allow(File).to receive(:exist?).and_return(true)
+      expect(described_class.new.path).to eq exe
     end
 
     context "and no OS X specific executable is found" do
       it "defaults to the *nix executable" do
-        File.stub(:exist? => false)
-        described_class.new.path.should match /#{described_class::DEFAULT_UNIX_PATH}\Z/
+        allow(File).to receive(:exist?).and_return(false)
+        expect(described_class.new.path).to eq described_class::DEFAULT_UNIX_PATH
       end
     end
   end
 
   context "when not on Windows or OS X" do
     it "selects the right executable" do
-      described_class.stub(:windows? => false, :osx? => false)
-      described_class.new.path.should match /#{described_class::EXE_NAME}\Z/
+      allow(described_class).to receive(:windows?).and_return(false)
+      allow(described_class).to receive(:osx?).and_return(false)
+      expect(described_class.new.path).to match /#{described_class::EXE_NAME}\z/
     end
   end
 end
