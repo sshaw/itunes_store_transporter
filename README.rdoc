@@ -172,7 +172,7 @@ As you can see, command options are turned into template variables.
 
 === Author
 
-Skye Shaw [sshaw AT gmail.com]
+Skye Shaw [skye.shaw AT gmail.com]
 
 === License
 
