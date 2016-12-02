@@ -165,10 +165,10 @@ As you can see, command options are turned into template variables.
 
 === More Info
 
-* Docs: http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/README_rdoc.html
+* Docs: http://www.rubydoc.info/gems/itunes_store_transporter
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 * Source Code: http://github.com/sshaw/itunes_store_transporter
-* Web Based GUI: http://github.com/sshaw/itunes_store_transporter_web
+* Transporter GUI: http://github.com/sshaw/itunes_store_transporter_web
 
 === Author
 

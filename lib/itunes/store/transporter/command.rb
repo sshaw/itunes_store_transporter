@@ -58,12 +58,12 @@ module ITunes
 
           # TODO: conf[:warnings]
           def handle_success(stdout_lines, stderr_lines, options)
-            stdout_lines.join
+            stdout_lines.join("\n")
           end
 
           def handle_error(stdout_lines, stderr_lines, options, exitcode)
             parser = OutputParser.new(stderr_lines)
-            errors = parser.errors.any? ? parser.errors : [ TransporterMessage.new(stderr_lines.join) ]
+            errors = parser.errors.any? ? parser.errors : [ TransporterMessage.new(stderr_lines.join("\n")) ]
             raise ExecutionError.new(errors, exitcode)
           end
 
