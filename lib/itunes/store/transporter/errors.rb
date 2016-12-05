@@ -1,33 +1,34 @@
 
 module ITunes
-  module Store      
+  module Store
     module Transporter
 
       class TransporterError < StandardError; end
       class OptionError < TransporterError; end
-      
+      class ParseError < TransporterError; end
+
       class ExecutionError < TransporterError
         attr :errors
-        attr :exitstatus        
-        
+        attr :exitstatus
+
         def initialize(errors, exitstatus = nil)
           @errors = [ errors ].flatten
           @exitstatus = exitstatus
           super @errors.map { |e| e.to_s }.join ", "
-        end         
+        end
       end
-      
+
       class TransporterMessage
         attr :code
         attr :message
-        
+
         def initialize(message, code = nil)
           @message = message
           @code = code
         end
 
         # 1000...2000?
-        
+
         def bad_data?
           (3000...4000).include?(code)
         end

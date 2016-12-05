@@ -37,6 +37,7 @@ module ITunes
         end
 
         private
+
         def parse_output(output)
           output.each do |line|
             if line =~ ERROR_LINE

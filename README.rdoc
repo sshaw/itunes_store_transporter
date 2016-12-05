@@ -9,8 +9,8 @@ Upload and manage your assets in the iTunes Store using the iTunes Store's Trans
 
  require "itunes/store/transporter"
 
- itms = iTunes::Store::Transporter.new(:username => "CouchCaster",
-                                       :shortname => "bigtimer",
+ itms = iTunes::Store::Transporter.new(:username => "SomeUser",
+                                       :shortname => "shrt",
                                        :password => "w3c@llYoU!")
 
  itms.upload("/path/to/yourpackage.itmsp")

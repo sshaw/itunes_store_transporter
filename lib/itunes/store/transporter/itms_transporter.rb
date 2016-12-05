@@ -205,6 +205,7 @@ module ITunes
         end
 
         private
+
         def run_command(name, options)
           Command.const_get(name.capitalize).new(@config, @defaults).run(create_options(options))
         end

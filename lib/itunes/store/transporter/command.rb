@@ -35,6 +35,7 @@ module ITunes
               end
             end
 
+            # TODO: problem as some errors exit 0, e.g., account locked
             if exitcode == 0
               handle_success(stdout_lines, stderr_lines, options)
             else
@@ -57,6 +58,7 @@ module ITunes
           end
 
           # TODO: conf[:warnings]
+          # TODO: Need to check for errors here too, 0 doesn't always mean success, e.g., account locked
           def handle_success(stdout_lines, stderr_lines, options)
             stdout_lines.join("\n")
           end
