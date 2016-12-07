@@ -200,8 +200,14 @@ module ITunes
           end
         end
 
-        %w|lookup providers schema status version|.each do |command|
+        %w|lookup providers schema version|.each do |command|
           define_method(command) { |*options| run_command(command, options.shift) }
+        end
+
+        def status(options)
+          options ||= {}
+          command = options.delete(:history) ? Command::StatusAll : Command::Status
+          command.new(@config, @defaults).run(create_options(options))
         end
 
         private

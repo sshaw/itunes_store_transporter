@@ -81,6 +81,20 @@ describe ITunes::Store::Transporter::ITMSTransporter do
     let(:command) { "Status" }
 
     it_behaves_like "a transporter method without a package argument"
+
+    context "when given :history => true" do
+      it "runs the status all command" do
+        ITunes::Store::Transporter::Command::StatusAll.any_instance.should_receive(:run)
+        subject.status(:history => true)
+      end
+    end
+
+    context "when given :history => false" do
+      it "runs the status command" do
+        ITunes::Store::Transporter::Command::Status.any_instance.should_receive(:run)
+        subject.status(:history => false)
+      end
+    end
   end
 
   describe "#upload" do

@@ -70,7 +70,7 @@ shared_examples_for "a command that accepts a shortname argument" do
 end
 
 shared_examples_for "a subclass of Command::Base" do
-  it { should be_a_kind_of(ITunes::Store::Transporter::Command::Base) }
+  it { is_expected.to be_a_kind_of(ITunes::Store::Transporter::Command::Base) }
 
   context "when on Windows" do
     it "automatically sets NoPause to true" do
@@ -428,6 +428,18 @@ describe ITunes::Store::Transporter::Command::Schema do
         end
       end
     end
+  end
+end
+
+describe ITunes::Store::Transporter::Command::StatusAll do
+  subject { described_class.new({}) }
+  let(:options) { create_options(:vendor_id => 123123) }
+
+  it { is_expected.to be_kind_of(ITunes::Store::Transporter::Command::Status) }
+
+  it "uses Transporter's statusAll mode" do
+    expect_shell_args("-m", "statusAll", :stdout => fixture("status.vendor_id_123123"))
+    subject.run(options)
   end
 end
 
