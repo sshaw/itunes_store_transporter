@@ -16,7 +16,17 @@ module SpecHelper
   end
 
   def expect_shell_args(*expected)
-    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should include(*expected); 0 }
+    output = expected.last.is_a?(Hash) ? expected.pop : {}
+    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) do |*args, &block|
+      expect(args.first).to include(*expected)
+
+      [:stdout, :stderr].each do |fd|
+        next unless output[fd]
+        output[fd].each { |line| block.call(line, fd) }
+      end
+
+      0
+    end
   end
 
   def fixture(path)
@@ -32,6 +42,7 @@ module SpecHelper
     [:stderr, :stdout].each do |fd|
       fixture = options[fd]
       next unless fixture
+
       lines = Array === fixture ? fixture : Fixture.for(fixture)
       outputs << [ lines, fd ]
     end

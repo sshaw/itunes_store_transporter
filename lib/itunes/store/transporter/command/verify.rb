@@ -18,6 +18,7 @@ module ITunes
           end
 
           protected
+
           def create_transporter_options(optz)
             # Include the option if false
             optz[:verify_assets] = !optz[:verify_assets] if optz.include?(:verify_assets)

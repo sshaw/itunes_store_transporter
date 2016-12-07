@@ -1,29 +1,41 @@
 vendor_id_123123: |
-  Vendor identifier:      123123
-  Apple identifier:       123123
-  iTunesConnect Status:   Not ready for sale
+  <itunes_transporter>
+    <upload_status apple_identifier="X9123X" vendor_identifier="123123">
+      <content_status_info content_review_status="Ready-NotReviewed" content_status="Unpolished" itunes_connect_status="Other">
+        <store_status not_on_store="N/A" on_store="N/A" ready_for_store="US"/>
+        <video_components>
+        <video_component component_delivered="2011-11-30 01:41:10" component_locale="N/A" component_name="Video" component_status="In Review"/>
+        <video_component component_delivered="2011-11-30 01:41:10" component_locale="en-US" component_name="Audio" component_status="In Review"/>
+        </video_components>
+      </content_status_info>
+      <upload_status_info created="2016-11-25 10:38:09" status="Imported"/>
+    </upload_status>
+  </itunes_transporter>
 
-  -------------------------Status Info-------------------------
-  Upload created: 2000-01-01 00:00:00
-  Upload state:   Uploaded
-  Upload state id:        1
-  Content state:  Irie
-  Content state id:       2
-
-vendor_id_789789: |
-  Vendor identifier:      789789
-
-  -------------------------Status Info-------------------------
-  Upload created: 2000-01-01 00:00:00
-  Upload state:   Uploaded
-  Upload state id:        1
-  Content state:  Irie
-  Content state id:       2
-
-  -------------------------Status Info #2-------------------------
-  Upload created: 2000-01-02 00:00:00
-  Upload state:   Some Failure
-  Upload state id:        2
-  Content state:  Still Irie
-  Content state id:       3
-
+vendor_id_123123_and_ABCABC: |
+  <itunes_transporter>
+    <upload_status apple_identifier="X9123X" vendor_identifier="123123">
+      <content_status_info content_review_status="Ready-NotReviewed" content_status="Unpolished" itunes_connect_status="Other">
+        <store_status not_on_store="N/A" on_store="N/A" ready_for_store="US"/>
+        <video_components>
+        <video_component component_delivered="2011-11-30 01:41:10" component_locale="N/A" component_name="Video" component_status="In Review"/>
+        <video_component component_delivered="2011-11-30 01:41:10" component_locale="en-US" component_name="Audio" component_status="In Review"/>
+        </video_components>
+      </content_status_info>
+      <upload_status_info created="2016-11-25 10:38:09" status="Imported"/>
+    </upload_status>
+    <upload_status apple_identifier="919191" vendor_identifier="ABCABC">
+      <content_status_info content_review_status="Ready-NotReviewed" content_status="Unpolished" itunes_connect_status="Other">
+        <store_status not_on_store="N/A" on_store="US,MX" ready_for_store="US"/>
+        <video_components>
+          <video_component component_delivered="2016-11-25 12:92:46" component_locale="World" component_name="Preview Film" component_status="Approved"/>
+          <video_component component_delivered="2016-11-25 12:11:07" component_locale="en-US" component_name="Audio" component_status="Approved"/>
+          <video_component component_delivered="2016-11-25 12:12:46" component_locale="en-US" component_name="Chapters" component_status="Approved"/>
+        </video_components>
+      </content_status_info>
+      <upload_status_info created="2011-08-25 10:50:09" status="Imported"/>
+      <upload_status_info created="2012-11-08 08:26:11" status="Imported"/>
+      <upload_status_info created="2013-10-31 05:55:29" status="Imported"/>
+      <upload_status_info created="2014-11-25 10:38:09" status="Imported"/>
+    </upload_status>
+  </itunes_transporter>

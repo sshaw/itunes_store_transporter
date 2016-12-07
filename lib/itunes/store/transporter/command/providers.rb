@@ -10,10 +10,11 @@ module ITunes
         #
         class Providers < Mode
           protected
+
           def mode
             "provider"
           end
-                    
+
           def handle_success(stdout_lines, stderr_lines, options)
             providers = []
             stdout_lines.each do |line|
