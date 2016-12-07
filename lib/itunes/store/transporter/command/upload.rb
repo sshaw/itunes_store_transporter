@@ -20,6 +20,12 @@ module ITunes
             options.on :streams, "-numStreams", Integer  # Only valid if TRANSPORT is Signiant
             options.on :log_history, "-loghistory", Optout::Dir.exists
           end
+
+          protected
+
+          def handle_success(stdout_lines, stderr_lines, options)
+            true
+          end
         end
       end
     end
