@@ -41,7 +41,7 @@ shared_examples_for "a boolean transporter option" do |option, expected|
 
   context "when not boolean" do
     it "raises an OptionError" do
-      lambda { subject.run(options.merge(option => "sshaw")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not accept/)
+      expect { subject.run(options.merge(option => "sshaw")) }.to raise_exception(ITunes::Store::Transporter::OptionError, /does not accept/)
     end
   end
 end
@@ -49,7 +49,7 @@ end
 shared_examples_for "a required option" do |option|
   it "must have a value" do
     ["", nil].each do |value|
-      lambda { subject.run(options.merge(option => value)) }.should raise_exception(ITunes::Store::Transporter::OptionError, /#{option}/)
+      expect { subject.run(options.merge(option => value)) }.to raise_exception(ITunes::Store::Transporter::OptionError, /#{option}/)
     end
   end
 end
@@ -57,14 +57,14 @@ end
 shared_examples_for "a command that accepts a shortname argument" do
   context "when the shortname's invalid" do
     it "raises an OptionError" do
-      lambda { subject.run(options.merge(:shortname => "+")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /shortname/)
+      expect { subject.run(options.merge(:shortname => "+")) }.to raise_exception(ITunes::Store::Transporter::OptionError, /shortname/)
     end
   end
 
   context "when the shortname's valid" do
     it "does not raise an exception" do
       mock_output
-      lambda { subject.run(options.merge(:shortname => "Too $hort")) }.should_not raise_exception
+      expect { subject.run(options.merge(:shortname => "Too $hort")) }.to_not raise_exception
     end
   end
 end
@@ -160,17 +160,17 @@ shared_examples_for "a subclass of Command::Base" do
       it "raises an ExecutionError" do
         mock_output(:exit => 1, :stderr => "stderr.errors")
         lambda { subject.run(options) }.should raise_error { |e|
-          e.should be_a(ITunes::Store::Transporter::ExecutionError)
+          expect(e).to be_a(ITunes::Store::Transporter::ExecutionError)
 
-          e.exitstatus.should == 1
-          e.errors.should have(2).items
+          expect(e.exitstatus).to eq 1
+          expect(e.errors.size).to eq 2
 
           # just check one
-          e.errors[0].should be_a(ITunes::Store::Transporter::TransporterMessage)
-          e.errors[0].code.should == 9000
-          e.errors[0].message.should match("Your audio of screwed up!")
-          e.errors[1].code.should == 4009
-          e.errors[1].message.should match("Chapter timecode is just plain wrong")
+          expect(e.errors[0]).to be_a(ITunes::Store::Transporter::TransporterMessage)
+          expect(e.errors[0].code).to eq 9000
+          expect(e.errors[0].message).to match("Your audio of screwed up!")
+          expect(e.errors[1].code).to eq 4009
+          expect(e.errors[1].message).to match("Chapter timecode is just plain wrong")
         }
       end
     end
@@ -179,7 +179,7 @@ end
 
 shared_examples_for "a transporter mode" do
   it_should_behave_like "a subclass of Command::Base"
-  it { should be_a_kind_of(ITunes::Store::Transporter::Command::Mode) }
+  it { is_expected.to be_a_kind_of(ITunes::Store::Transporter::Command::Mode) }
 
   it "requires a username" do
     args = options
@@ -269,13 +269,17 @@ describe ITunes::Store::Transporter::Command::Providers do
 
   subject { described_class.new({}) }
   let(:options) { create_options }
-  its(:mode) { should == "provider" }
+
+  it "uses Transporter's provider mode" do
+    expect_shell_args("-m", "provider")
+    subject.run(options)
+  end
 
   describe "#run" do
     it "returns the shortname and longname for each provider" do
       mock_output(:stdout => "providers.two", :stderr => "stderr.info")
-      subject.run(options).should == [ { :longname => "Some Great User", :shortname => "luser" },
-                                       { :longname => "Skye's Taco Eating Service Inc.", :shortname => "conmuchacebolla" } ]
+      expect(subject.run(options)).to eq [ { :longname => "Some Great User", :shortname => "luser" },
+                                           { :longname => "Skye's Taco Eating Service Inc.", :shortname => "conmuchacebolla" } ]
     end
   end
 end
@@ -293,7 +297,7 @@ describe ITunes::Store::Transporter::Command::Upload do
     context "when successful" do
       it "returns true" do
         mock_output(:stdout => "stdout.success")
-        subject.run(options).should be_true
+        expect(subject.run(options)).to be true
       end
     end
   end
@@ -301,7 +305,7 @@ describe ITunes::Store::Transporter::Command::Upload do
   describe "options" do
     describe ":rate" do
       it "must be an integer" do
-        lambda { subject.run(options.merge(:rate => "123")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /rate/)
+        expect { subject.run(options.merge(:rate => "123")) }.to raise_exception(ITunes::Store::Transporter::OptionError, /rate/)
       end
 
       it_should_behave_like "a transporter option", {:rate => 123}, "-k", "123"
@@ -315,11 +319,11 @@ describe ITunes::Store::Transporter::Command::Upload do
       end
 
       it "is case sensitive" do
-        lambda { subject.run(options.merge(:transport => "aspera")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+        expect { subject.run(options.merge(:transport => "aspera")) }.to raise_exception(ITunes::Store::Transporter::OptionError)
       end
 
       it "raises an OptionError if the transport is not supported" do
-        lambda { subject.run(options.merge(:transport => "ftp")) }.should raise_exception(ITunes::Store::Transporter::OptionError)
+        expect { subject.run(options.merge(:transport => "ftp")) }.to raise_exception(ITunes::Store::Transporter::OptionError)
       end
     end
 
@@ -348,7 +352,6 @@ describe ITunes::Store::Transporter::Command::Lookup do
   subject { described_class.new({}) }
 
   let(:options) { create_options(:vendor_id => "X") }
-  its(:mode) { should == "lookupMetadata" }
 
   # Fake the directory iTMSTransporter creates for the metadata
   before(:each) do
@@ -364,6 +367,11 @@ describe ITunes::Store::Transporter::Command::Lookup do
   end
 
   after(:each) { FileUtils.rm_rf(@tmpdir) }
+
+  it "uses Transporter's lookupMetadata mode" do
+    expect_shell_args("-m", "lookupMetadata")
+    subject.run(options)
+  end
 
   describe "#run" do
     before { mock_output }
@@ -404,7 +412,11 @@ describe ITunes::Store::Transporter::Command::Schema do
 
   subject { described_class.new({}) }
   let(:options) { create_options(:type => "strict", :version => "film5") }
-  its(:mode) { should == "generateSchema" }
+
+  it "uses Transporter's generateSchema mode" do
+    expect_shell_args("-m", "generateSchema")
+    subject.run(options)
+  end
 
   describe "#run" do
     context "when successful" do
@@ -568,8 +580,12 @@ describe ITunes::Store::Transporter::Command::Verify do
   it_behaves_like "a command that accepts a shortname argument"
 
   subject { described_class.new({}) }
-  its(:mode) { should == "verify" }
   let(:options) { create_options(:package => create_package) }
+
+  it "uses Transporter's verify mode" do
+    expect_shell_args("-m", "verify")
+    subject.run(options)
+  end
 
   describe "#run" do
     context "when successful" do  #successful means exit(0)
