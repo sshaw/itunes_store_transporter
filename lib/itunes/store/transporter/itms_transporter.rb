@@ -102,7 +102,7 @@ module ITunes
         ##
         # :method: status
         # :call-seq:
-        #   status(options = {})
+        #   status(options)
         #
         # Retrieve the status of a previously uploaded package.
         #
@@ -205,9 +205,9 @@ module ITunes
         end
 
         def status(options)
-          options ||= {}
-          command = options.delete(:history) ? Command::StatusAll : Command::Status
-          command.new(@config, @defaults).run(create_options(options))
+          options = create_options(options)
+          command = options.delete(:all) ? Command::StatusAll : Command::Status
+          command.new(@config, @defaults).run(options)
         end
 
         private

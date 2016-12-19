@@ -89,6 +89,7 @@ module ITunes
         end
 
         private
+
         def poll(stdout, stderr)
           read = [ stdout, stderr ]
 

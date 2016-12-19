@@ -116,7 +116,7 @@ module ITunes
           end
 
           def territory_list(value)
-            value && value != NA ? value.split(",") : []
+            value && value != NA ? value.split(/\s*,\s*/) : []
           end
         end
       end

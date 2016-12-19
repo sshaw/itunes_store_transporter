@@ -1,4 +1,5 @@
 vendor_id_123123: |
+  <?xml version="1.0" encoding="UTF-8"?>
   <itunes_transporter>
     <upload_status apple_identifier="X9123X" vendor_identifier="123123">
       <content_status_info content_review_status="Ready-NotReviewed" content_status="Unpolished" itunes_connect_status="Other">
@@ -12,7 +13,16 @@ vendor_id_123123: |
     </upload_status>
   </itunes_transporter>
 
+vendor_id_123134_failed: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <itunes_transporter>
+    <upload_status vendor_identifier="98143907070932">
+      <upload_status_info created="2014-08-14 15:09:26" status="Upload Failed"/>
+    </upload_status>
+  </itunes_transporter>
+
 vendor_id_123123_and_ABCABC: |
+  <?xml version="1.0" encoding="UTF-8"?>
   <itunes_transporter>
     <upload_status apple_identifier="X9123X" vendor_identifier="123123">
       <content_status_info content_review_status="Ready-NotReviewed" content_status="Unpolished" itunes_connect_status="Other">

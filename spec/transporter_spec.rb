@@ -79,20 +79,25 @@ describe ITunes::Store::Transporter::ITMSTransporter do
   describe "#status" do
     let(:method) { :status }
     let(:command) { "Status" }
+    let(:status) { double("status command") }
 
     it_behaves_like "a transporter method without a package argument"
 
-    context "when given :history => true" do
+    context "when given :all => true" do
       it "runs the status all command" do
-        ITunes::Store::Transporter::Command::StatusAll.any_instance.should_receive(:run)
-        subject.status(:history => true)
+        expect(ITunes::Store::Transporter::Command::StatusAll).to receive(:new).and_return(status)
+        expect(status).to receive(:run)
+
+        subject.status(:all => true)
       end
     end
 
-    context "when given :history => false" do
+    context "when given :all => false" do
       it "runs the status command" do
-        ITunes::Store::Transporter::Command::Status.any_instance.should_receive(:run)
-        subject.status(:history => false)
+        expect(ITunes::Store::Transporter::Command::Status).to receive(:new).and_return(status)
+        expect(status).to receive(:run)
+
+        subject.status(:all => false)
       end
     end
   end
