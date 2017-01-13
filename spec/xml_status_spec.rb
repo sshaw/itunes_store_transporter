@@ -40,7 +40,21 @@ RSpec.describe ITunes::Store::Transporter::XML::Status do
     it "raises a ParseError" do
       expect {
         described_class.new.parse("<a><b></a>")
-      }.to raise_error( ITunes::Store::Transporter::ParseError, /not well-formed/i)
+      }.to raise_error(ITunes::Store::Transporter::ParseError, /not well-formed/i)
+    end
+  end
+
+  context "given an XML doc that contains an error message" do
+    it "raises a ExecutionError containing the message and its code" do
+      expect {
+        described_class.new.parse(fixture("status.error_message").join("\n"))
+      }.to raise_error(ITunes::Store::Transporter::ExecutionError) { |e|
+        expect(e.errors.size).to eq 2
+        expect(e.errors[0].message).to eq "Error message one."
+        expect(e.errors[0].code).to eq -1234
+        expect(e.errors[1].message).to eq "Error message two."
+        expect(e.errors[1].code).to eq 9999
+      }
     end
   end
 end

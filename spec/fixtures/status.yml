@@ -49,3 +49,13 @@ vendor_id_123123_and_ABCABC: |
       <upload_status_info created="2014-11-25 10:38:09" status="Imported"/>
     </upload_status>
   </itunes_transporter>
+
+
+error_message: |
+  <itunes_transporter a="foo">
+
+    Error Summary
+
+      Error message one. (-1234)
+      Error message two. (9999)
+  </itunes_transporter>

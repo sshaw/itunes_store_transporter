@@ -11,7 +11,6 @@ module ITunes
         #
         class Status
           NA = "N/A".freeze
-          WELLFORMED_ERROR = "".freeze
 
           ##
           #
@@ -23,7 +22,7 @@ module ITunes
           #
           # === Errors
           #
-          # ParseError
+          # ParseError, ExecutionError
           #
           # === Returns
           #
@@ -33,9 +32,11 @@ module ITunes
           # ITunes::Store::Transporter::ITMSTransporter#status
           #
           def parse(xml)
-            # TODO: XML with no statuses???
             doc = _parse(xml)
             status = []
+
+            # No elements means there's just text nodes with an error message
+            raise self, doc.root.get_text.to_s unless doc.root.has_elements?
 
             doc.root.each_element do |e|
               next unless e.node_type == :element
@@ -117,6 +118,23 @@ module ITunes
 
           def territory_list(value)
             value && value != NA ? value.split(/\s*,\s*/) : []
+          end
+
+          def exception(text)
+            # Some overlap here with OutputParser, may want to create ErrorParser
+            text.sub!(/^\s*Error Summary\s*/, "")
+            text.strip!
+
+            errors = text.split(/\n\s*/).map do |line|
+              message, code = line, nil
+              if message =~ /(.+)\((-?\d+)\)\Z/
+                message, code = $1, $2.to_i
+              end
+
+              TransporterMessage.new(message.strip, code)
+            end
+
+            ExecutionError.new(errors)
           end
         end
       end
