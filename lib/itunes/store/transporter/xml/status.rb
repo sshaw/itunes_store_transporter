@@ -24,6 +24,8 @@ module ITunes
           #
           # ParseError, ExecutionError
           #
+          # An ExecutionError is raised if the XML contains iTMSTransporter error messages.
+          #
           # === Returns
           #
           # A Hash representation of the XML output.

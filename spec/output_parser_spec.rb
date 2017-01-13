@@ -7,20 +7,36 @@ describe ITunes::Store::Transporter::OutputParser do
     context "without an error code" do
       before(:all) { @parser = described_class.new(fixture("errors_and_warnings.no_error_number")) }
 
-      subject { @parser }
-      its(:warnings) { should be_empty }
-      its(:errors) { should have(2).items }
+      it "has no warnings" do
+        expect(@parser.warnings).to be_empty
+      end
+
+      it "has two errors" do
+        expect(@parser.errors.size).to eq 2
+      end
 
       describe "the first error" do
-        subject { @parser.errors.first }
-        its(:code) { should be_nil }
-        its(:message) { should == "An error occurred while doing fun stuff" }
+        before { @error = @parser.errors[0] }
+
+        it "has a nil code" do
+          expect(@error.code).to be_nil
+        end
+
+        it "has the right error message" do
+          expect(@error.message).to eq "An error occurred while doing fun stuff"
+        end
       end
 
       describe "the second error" do
-        subject { @parser.errors.last }
-        its(:code) { should be_nil }
-        its(:message) { should == "An exception has occurred: network timeout" }
+        before { @error = @parser.errors[1] }
+
+        it "has a nil code" do
+          expect(@error.code).to be_nil
+        end
+
+        it "has the right error message" do
+          expect(@error.message).to eq "An exception has occurred: network timeout"
+        end
       end
     end
 

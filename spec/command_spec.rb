@@ -105,7 +105,7 @@ shared_examples_for "a subclass of Command::Base" do
         let(:print?) { false }
 
         it "does not print to stderr" do
-          $stderr.string.should be_empty
+          expect($stderr.string).to be_empty
         end
       end
     end
@@ -133,7 +133,7 @@ shared_examples_for "a subclass of Command::Base" do
         let(:print?) { false }
 
         it "does not print to stdout" do
-          $stdout.string.should be_empty
+          expect($stdout.string).to be_empty
         end
       end
     end
@@ -378,8 +378,8 @@ describe ITunes::Store::Transporter::Command::Lookup do
 
     context "when successful" do
       it "returns the metadata and deletes the temp directory used to output the metadata" do
-        subject.run(options).should == @metadata
-        File.exists?(@tmpdir).should be_false
+        expect(subject.run(options)).to eq @metadata
+        expect(File.exists?(@tmpdir)).to be false
       end
 
       context "when the metadata file was not created" do
