@@ -1,7 +1,27 @@
+v0.2.0    2017-XX-XX
+--------------------
+Changes:
+* Drop support for Ruby 1.8.7
+* Status command returns an Array of Hashes
+* Upload command returns true on success, not the command's output
+
+Enhancements:
+* Support for statusAll mode
+* Status command XML parser
+
+Bug Fixes:
+* Status command only returned a single component status
+
+This release was brought to you by press9 media solutions berlin - http://press9.de.
+Thanks press9!
+
 v0.1.3    2015-03-31
 --------------------
 Enhancements:
-* Add the :batch option to support batch operations (thanks to press9 media solutions berlin - press9.de)
+* Add the :batch option to support batch operations
+
+This release was brought to you by press9 media solutions berlin - http://press9.de.
+Thanks press9!
 
 v0.1.2    2015-03-07
 --------------------
