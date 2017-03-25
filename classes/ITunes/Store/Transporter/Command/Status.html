@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>ITunes::Store::Transporter::Command::Status</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span> 
+            ITunes::Store::Transporter::Command::Status 
+            
+                <span class="parent">&lt; 
+                    
+                    <a href="Mode.html">ITunes::Store::Transporter::Command::Mode</a>
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../../../files/lib/itunes/store/transporter/command/status_rb.html">lib/itunes/store/transporter/command/status.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>Retrieve the most recent status of previously uploaded packages</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>C</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-create_transporter_options">create_transporter_options</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>H</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-handle_success">handle_success</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>N</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-new">new</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-new">
+            
+              <b>new</b>(*config)
+            
+            <a href="../../../../../classes/ITunes/Store/Transporter/Command/Status.html#method-c-new" name="method-c-new" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-new_source')" id="l_method-c-new_source">show</a>
+                
+              </p>
+              <div id="method-c-new_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/command/status.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">config</span>)
+  <span class="ruby-keyword">super</span>
+  <span class="ruby-identifier">options</span>.<span class="ruby-identifier">on</span> <span class="ruby-value">:vendor_id</span>, <span class="ruby-string">&quot;-vendor_ids&quot;</span>, <span class="ruby-regexp">/\w/</span>, <span class="ruby-value">:multiple</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">options</span>.<span class="ruby-identifier">on</span> <span class="ruby-value">:apple_id</span>, <span class="ruby-string">&quot;-apple_ids&quot;</span>, <span class="ruby-regexp">/\w/</span>, <span class="ruby-value">:multiple</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">options</span>.<span class="ruby-identifier">on</span> <span class="ruby-value">:format</span>, <span class="ruby-string">&quot;-outputFormat&quot;</span>, <span class="ruby-node">%w[xml]</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                  
+      <div class="sectiontitle">Instance Protected methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-create_transporter_options">
+            
+              <b>create_transporter_options</b>(optz)
+            
+            <a href="../../../../../classes/ITunes/Store/Transporter/Command/Status.html#method-i-create_transporter_options" name="method-i-create_transporter_options" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-create_transporter_options_source')" id="l_method-i-create_transporter_options_source">show</a>
+                
+              </p>
+              <div id="method-i-create_transporter_options_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/command/status.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">create_transporter_options</span>(<span class="ruby-identifier">optz</span>)
+  <span class="ruby-identifier">optz</span>[<span class="ruby-value">:format</span>] = <span class="ruby-string">&quot;xml&quot;</span>
+  <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-handle_success">
+            
+              <b>handle_success</b>(stdout_lines, stderr_lines, options)
+            
+            <a href="../../../../../classes/ITunes/Store/Transporter/Command/Status.html#method-i-handle_success" name="method-i-handle_success" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-handle_success_source')" id="l_method-i-handle_success_source">show</a>
+                
+              </p>
+              <div id="method-i-handle_success_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/command/status.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">handle_success</span>(<span class="ruby-identifier">stdout_lines</span>, <span class="ruby-identifier">stderr_lines</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-comment"># Pre-XML behavior. Not sure if it should be kept.</span>
+  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">if</span> <span class="ruby-identifier">stdout_lines</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">XML</span><span class="ruby-operator">::</span><span class="ruby-constant">Status</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">stdout_lines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;&quot;</span>))
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ParseError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">TransporterError</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+
+    </div>
+  </body>
+</html>    

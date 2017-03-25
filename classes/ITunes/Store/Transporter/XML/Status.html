@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>ITunes::Store::Transporter::XML::Status</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span> 
+            ITunes::Store::Transporter::XML::Status 
+            
+                <span class="parent">&lt; 
+                    
+                    <a href="../../../../Object.html">Object</a>
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../../../files/lib/itunes/store/transporter/xml/status_rb.html">lib/itunes/store/transporter/xml/status.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p><a href="../XML.html">XML</a> parser for the status and statusAll commands
+<a href="../XML.html">XML</a> output</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>P</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-parse">parse</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+      <!-- Section constants -->
+      <div class="sectiontitle">Constants</div>
+      <table border='0' cellpadding='5'>
+        
+          <tr valign='top'>
+            <td class="attr-name">NA</td>
+            <td>=</td>
+            <td class="attr-value">&quot;N/A&quot;.freeze</td>
+          </tr>
+          
+            <tr valign='top'>
+              <td>&nbsp;</td>
+              <td colspan="2" class="attr-desc"></td>
+            </tr>
+          
+        
+      </table>
+    
+
+
+    
+
+
+    <!-- Methods -->
+        
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-parse">
+            
+              <b>parse</b>(xml)
+            
+            <a href="../../../../../classes/ITunes/Store/Transporter/XML/Status.html#method-i-parse" name="method-i-parse" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Parse status or statusAll <a href="../XML.html">XML</a></p>
+
+<h3 id="method-i-parse-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>xml (String|IO)
+<dd>
+<p>The <a href="../XML.html">XML</a></p>
+</dd></dl>
+
+<h3 id="method-i-parse-label-Errors">Errors</h3>
+
+<p><a href="../ParseError.html">ParseError</a>, <a
+href="../ExecutionError.html">ExecutionError</a></p>
+
+<p>An <a href="../ExecutionError.html">ExecutionError</a> is raised if the <a
+href="../XML.html">XML</a> contains iTMSTransporter error messages.</p>
+
+<h3 id="method-i-parse-label-Returns">Returns</h3>
+
+<p>A Hash representation of the <a href="../XML.html">XML</a> output. Hash
+keys and values are slightly different (better, I hope) than the elements
+and attributes returned by Apple. See the documentation for <a
+href="../ITMSTransporter.html#method-i-status">ITunes::Store::Transporter::ITMSTransporter#status</a></p>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-parse_source')" id="l_method-i-parse_source">show</a>
+                
+              </p>
+              <div id="method-i-parse_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/xml/status.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">parse</span>(<span class="ruby-identifier">xml</span>)
+  <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">_parse</span>(<span class="ruby-identifier">xml</span>)
+  <span class="ruby-identifier">status</span> = []
+
+  <span class="ruby-comment"># No elements means there&#39;s just text nodes with an error message</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-keyword">self</span>, <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">get_text</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">has_elements?</span>
+
+  <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">each_element</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">node_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:element</span>
+    <span class="ruby-identifier">status</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">upload_status</span>(<span class="ruby-identifier">e</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">status</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+
+    </div>
+  </body>
+</html>    

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>README.rdoc</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/github.css" type="text/css" media="screen" />
+<script src="../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            README.rdoc
+        </h1>
+        <ul class="files">
+            <li>README.rdoc</li>
+            <li>Last modified: 2017-09-18 20:50:06 -0400</li>
+        </ul>
+    </div>
+
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<h1 id="label-iTunes-3A-3AStore-3A-3ATransporter">iTunes::Store::Transporter</h1>
+
+<p><a href="http://travis-ci.org/sshaw/itunes_store_transporter"><img
+src="https://secure.travis-ci.org/sshaw/itunes_store_transporter.svg"/></a>
+<a
+href="https://ci.appveyor.com/project/sshaw/itunes-store-transporter"><img
+src="https://ci.appveyor.com/api/projects/status/k6w6ob5f7s9j8pv8?svg=true"/></a>
+<a
+href="https://codeclimate.com/github/sshaw/itunes_store_transporter"><img
+src="https://codeclimate.com/github/sshaw/itunes_store_transporter.svg"
+/></a></p>
+
+<p>Upload and manage your assets in the iTunes Store using the iTunes
+Store&#39;s Transporter (<code>iTMSTransporter</code>).</p>
+
+<h3 id="label-Overview">Overview</h3>
+
+<pre><code>require &quot;itunes/store/transporter&quot;
+
+itms = iTunes::Store::Transporter.new(:username =&gt; &quot;SomeUser&quot;,
+                                      :shortname =&gt; &quot;shrt&quot;,
+                                      :password =&gt; &quot;w3c@llYoU!&quot;)
+
+itms.upload(&quot;/path/to/yourpackage.itmsp&quot;)
+metadata = itms.lookup(:apple_id =&gt; &quot;yourpackage&quot;)
+
+begin
+  itms.verify(&quot;/path/to/package2.itmsp&quot;, :verify_asssets =&gt; false)
+rescue iTunes::Store::Transporter::ExecutionError =&gt; e
+  puts &quot;Exited with #{e.exitstatus}&quot;
+
+  e.errors.each do |error|
+    puts &quot;#{error.message} - #{error.code}&quot;
+    puts &quot;Basically, you have some faulty metadata&quot; if error.missing_data?
+  end
+end
+</code></pre>
+
+<h3 id="label-Description">Description</h3>
+
+<p><code>iTunes::Store::Transporter</code> is a wrapper around Apple&#39;s
+<code>iTMSTransporter</code> program. It currently supports the following
+operations:</p>
+<ul><li>
+<p>Upload packages</p>
+</li><li>
+<p>Validate packages</p>
+</li><li>
+<p>Retrieve status information</p>
+</li><li>
+<p>Lookup package metadata and video assets</p>
+</li><li>
+<p>List providers</p>
+</li><li>
+<p>Retrieve iTunes metadata schemas</p>
+</li></ul>
+
+<p>It also includes <code>itms</code>, an executable that&#39;s sorta like
+using <code>iTMSTransporter</code> directly except that it can send email
+notifications and allows one to set global/per-command defaults via
+<code>$HOME/.itms</code>.</p>
+
+<h3 id="label-Requirements">Requirements</h3>
+<ul><li>
+<p>Optout (<code>gem install optout</code>)</p>
+</li><li>
+<p>iTunes Store Transporter (<a
+href="http://www.apple.com/itunes/sellcontent">www.apple.com/itunes/sellcontent</a>)</p>
+</li></ul>
+
+<h3 id="label-Locating+iTMSTransporter">Locating iTMSTransporter</h3>
+
+<p>If the <code>iTMSTransporter</code> cannot be found in <a
+href="https://github.com/sshaw/itunes_store_transporter/blob/fcb4f0f9ada4a45764160beac6a049b0d419c8a9/lib/itunes/store/transporter/shell.rb#L31">one
+your platform’s known locations</a> you must specify it when creating an
+instance of <code>iTunes::Store::Transporter</code> via <a
+href="http://www.rubydoc.info/gems/itunes_store_transporter/ITunes/Store/Transporter/ITMSTransporter#initialize-instance_method">the
+:path option</a>.</p>
+
+<p>If you&#39;re using the bundled <code>itms</code> command you must use its
+<code>--path</code> option or specify the path in the itms config file. See
+the <code>itms</code> section for more info.</p>
+
+<h3 id="label-Running+on+Windows">Running on Windows</h3>
+
+<p>On Windows <code>iTMSTransporter</code> is called via the
+<code>iTMSTransporter.CMD</code> batch file. This file does not handle the
+<code>iTMSTransporter</code>&#39;s exit status correctly, causing
+<code>iTunes::Store::Transporter</code> to report everything as a success.</p>
+
+<p>This can be fixed by modifying <code>iTMSTransporter.CMD</code> (note that
+the following does not mimic the batch file exactly):</p>
+
+<pre><code>...
+
+call iTMSTransporter\iTMSTransporter %*
+
+REM Add this line:
+set exited=%errorlevel%
+
+cd %olddir%
+
+REM Add this line too:
+exit /b %exited%</code></pre>
+
+<h3 id="label-Using+itms">Using itms</h3>
+
+<p><code>itms COMMAND [OPTIONS] [PACKAGE]</code></p>
+<ul><li>
+<p><code>COMMAND</code> - The command to run, which can be any one of <a
+href="http://sshaw.github.io/itunes_store_transporter/classes/ITunes/Store/Transporter/ITMSTransporter.html">the
+iTunes::Store::Transporter methods</a></p>
+</li><li>
+<p><code>OPTIONS</code> - These are quivalent to the given
+<code>COMMAND</code>&#39;s options except they must be given in a strict
+long option format. For example <code>:apple_id =&gt;
+&quot;X123&quot;</code> would be <code>--apple-id=X123</code>. Boolean
+options can be negated with the <code>--no-</code> prefix. For more info
+see <a
+href="http://sshaw.github.io/itunes_store_transporter/classes/ITunes/Store/Transporter/ITMSTransporter.html">each
+command’s options</a>.</p>
+</li><li>
+<p><code>PACKAGE</code> - The package or directory to operate on, if required
+by the command</p>
+</li></ul>
+
+<p><strong>Note that options with a value must contain the equals
+character</strong> (<code>&quot;=&quot;</code>). The format is
+<code>--option=value</code> and not <code>--option value</code>.</p>
+
+<h4 id="label-Examples">Examples</h4>
+
+<pre><code>itms upload --username=sshaw --password=w3cAllYoU --transport=aspera a_package.itmsp
+itms version
+itms status --no-print-stderr --vendor-id=X123123 --username=sshaw --password=sekr3t_ --shortname=ss</code></pre>
+
+<h4 id="label-Username-2C+Password-2C+Short+Name">Username, Password, Short Name</h4>
+
+<p>Most all commands require your username and password, some require a
+shortname. These can be specified on the command line via the
+<code>--username</code>, <code>--password</code>, and
+<code>--shortname</code> options, or via an <code>itms</code> config file.
+See the config file section below.</p>
+
+<h4 id="label-Lookup+command">Lookup command</h4>
+
+<p>The lookup command differs slightly from the gem by allowing you to
+download low-quality copies of the assets associated with the looked up
+metadata. These assets are created by Apple (at the time of this writing,
+Apple only allows you to download full and preview assets, there is nothing
+in <code>itms</code> that would prevent you from downloading other types of
+assets if/when they&#39;re supported).</p>
+
+<p>For example, to lookup the metadata for package <code>X123</code> and
+download low-quality copies of all the assets:</p>
+
+<pre><code>itms lookup --vendor-id=X123 --assets</code></pre>
+
+<p>To download a particular asset type just provide its name:</p>
+
+<pre><code>itms lookup --vendor-id=X123 --assets=preview</code></pre>
+
+<p>If there are multiple territories this will download the preview assets for
+each of them. To only download assets in a given territory or territories
+use:</p>
+
+<pre><code>itms lookup --vendor-id=X123 --assets=preview:US
+itms lookup --vendor-id=X123 --assets=preview:US:BR</code></pre>
+
+<p>If necessary multiple asset types can be seperated by a comma:</p>
+
+<pre><code>itms lookup --vendor-id=X123 --assets=full,preview
+itms lookup --vendor-id=X123 --assets=full,preview:MX</code></pre>
+
+<h4 id="label-Config+file">Config file</h4>
+
+<p>Default options and email notifications can be placed in a YAML file at
+<code>$HOME/.itms</code>. To skip loading the config file use the
+<code>--no-config</code> option.</p>
+
+<pre><code># Global command defaults
+path: /usr/bin
+username: sshaw
+password: Pa55W0rd!
+
+# Global email defaults
+email:
+  to: everyone@example.com
+  from: no-reply@example.com
+  host: smtp.example.com
+
+# Verify command
+verify:
+  shortname: lUzer
+
+# Upload command
+upload:
+  shortname: enc0d3rz
+  transport: Aspera
+  rate: 750000
+  # Email notifications for the upload command
+  email:
+    success:
+      cc: assets@example.com
+      subject: iTunes Upload &lt;%= @apple_id %&gt;
+      message: |
+        &lt;%= @username %&gt; uploaded it using &lt;%= @transport %&gt;
+
+        Bye!
+    failure:
+      to: support@example.com
+      subject: Upload Failed!
+      message: |
+        Here&#39;s the problem:
+
+        &lt;%= @error %&gt;
+
+        Fix it!</code></pre>
+
+<p>As you can see, command options are turned into template variables.</p>
+
+<h3 id="label-More+Info">More Info</h3>
+<ul><li>
+<p>Docs: <a
+href="http://www.rubydoc.info/gems/itunes_store_transporter">www.rubydoc.info/gems/itunes_store_transporter</a></p>
+</li><li>
+<p>Bugs: <a
+href="http://github.com/sshaw/itunes_store_transporter/issues">github.com/sshaw/itunes_store_transporter/issues</a></p>
+</li><li>
+<p>Source Code: <a
+href="http://github.com/sshaw/itunes_store_transporter">github.com/sshaw/itunes_store_transporter</a></p>
+</li><li>
+<p>iTunes Store Transporter: GUI: <a
+href="http://transportergui.com">transportergui.com</a></p>
+</li></ul>
+
+<h3 id="label-Author">Author</h3>
+
+<p>Skye Shaw [skye.shaw AT gmail.com]</p>
+
+<h3 id="label-License">License</h3>
+
+<p>Released under the MIT License: <a
+href="http://www.opensource.org/licenses/MIT">www.opensource.org/licenses/MIT</a></p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+              </div>
+
+    </div>
+  </body>
+</html>

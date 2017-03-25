@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>ITunes::Store::Transporter::ITMSTransporter</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span> 
+            ITunes::Store::Transporter::ITMSTransporter 
+            
+                <span class="parent">&lt; 
+                    
+                    <a href="../../../Object.html">Object</a>
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../../files/lib/itunes/store/transporter/itms_transporter_rb.html">lib/itunes/store/transporter/itms_transporter.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>Upload and manage your assets in the iTunes <a
+href="../../Store.html">Store</a> using the iTunes Store&#39;s <a
+href="../Transporter.html">Transporter</a> (<code>iTMSTransporter</code>).</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>L</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-lookup">lookup</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>N</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-new">new</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>P</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-providers">providers</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>S</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-schema">schema</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-status">status</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>U</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-upload">upload</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>V</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-verify">verify</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-version">version</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-new">
+            
+              <b>new</b>(options = nil)
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-c-new" name="method-c-new" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <h3 id="method-c-new-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h3 id="method-c-new-label-Options">Options</h3>
+
+<p>Options given here will be used as defaults for all subsequent method
+calls. Thus you can set method specific options here but, if you call a
+method that does not accept one of these options, an <a
+href="OptionError.html">OptionError</a> will be raised.</p>
+
+<p>See specific methods for a list of options.</p>
+<dl class="rdoc-list label-list"><dt>:username (String)
+<dd>
+<p>Your username</p>
+</dd><dt>:password (String)
+<dd>
+<p>Your password</p>
+</dd><dt>:shortname (String)
+<dd>
+<p>Your shortname. Optional, not every iTunes account has one</p>
+</dd><dt>:path (String)
+<dd>
+<p>The path to the <code>iTMSTransporter</code>. Optional.</p>
+</dd><dt>:print_stdout (Boolean)
+<dd>
+<p>Print <code>iTMSTransporter</code>&#39;s stdout to your stdout. Defaults to
+<code>false</code>.</p>
+</dd><dt>:print_stderr (Boolean)
+<dd>
+<p>Print <code>iTMSTransporter</code>&#39;s stderr to your stderr. Defaults to
+<code>false</code>.</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-new_source')" id="l_method-c-new_source">show</a>
+                
+              </p>
+              <div id="method-c-new_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">initialize</span>(<span class="ruby-identifier">options</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@defaults</span> = <span class="ruby-identifier">create_options</span>(<span class="ruby-identifier">options</span>)
+  <span class="ruby-ivar">@config</span> = {
+    <span class="ruby-value">:path</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@defaults</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:path</span>),
+    <span class="ruby-value">:print_stdout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@defaults</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:print_stdout</span>),
+    <span class="ruby-value">:print_stderr</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@defaults</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:print_stderr</span>),
+  }
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                  
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-lookup">
+            
+              <b>lookup(options = {})
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-lookup" name="method-i-lookup" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Retrieve the metadata for a previously delivered package.</p>
+
+<h3 id="method-i-lookup-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h4 id="method-i-lookup-label-Options">Options</h4>
+
+<p>You must use either the <code>:apple_id</code> or <code>:vendor_id</code>
+option to identify the package</p>
+
+<h3 id="method-i-lookup-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-lookup-label-Returns">Returns</h3>
+<dl class="rdoc-list label-list"><dt>String
+<dd>
+<p>The metadata</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-lookup_source')" id="l_method-i-lookup_source">show</a>
+                
+              </p>
+              <div id="method-i-lookup_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 59</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-providers">
+            
+              <b>providers(options = {})
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-providers" name="method-i-providers" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>List of Providers for whom your account is authorzed to deliver for.</p>
+
+<h3 id="method-i-providers-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h3 id="method-i-providers-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-providers-label-Returns">Returns</h3>
+<dl class="rdoc-list label-list"><dt>Array
+<dd>
+<p>Each element is a <code>Hash</code> with two keys: <code>:shortname</code>
+and <code>:longname</code> representing the given provider&#39;s long and
+short names</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-providers_source')" id="l_method-i-providers_source">show</a>
+                
+              </p>
+              <div id="method-i-providers_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 78</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-schema">
+            
+              <b>schema(options = {})
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-schema" name="method-i-schema" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Download a RelaxNG schema file for a particular metadata specification.</p>
+
+<h3 id="method-i-schema-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h3 id="method-i-schema-label-Options">Options</h3>
+<dl class="rdoc-list label-list"><dt>:type (String)
+<dd>
+<p>transitional or strict</p>
+</dd><dt>:version (String)
+<dd>
+<p>The schema version you&#39;d like to download. This is typically in the
+form of <code>schemaVERSION</code>. E.g., <code>film4.8</code></p>
+</dd></dl>
+
+<h3 id="method-i-schema-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-schema-label-Returns">Returns</h3>
+<dl class="rdoc-list label-list"><dt>String
+<dd>
+<p>The schema</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-schema_source')" id="l_method-i-schema_source">show</a>
+                
+              </p>
+              <div id="method-i-schema_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 102</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-status">
+            
+              <b>status(options)
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-status" name="method-i-status" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Retrieve the status of a previously uploaded package.</p>
+
+<h3 id="method-i-status-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h3 id="method-i-status-label-Options">Options</h3>
+<dl class="rdoc-list label-list"><dt>:vendor_id (String)
+<dd>
+<p>ID of the package you want status info on</p>
+</dd></dl>
+
+<h3 id="method-i-status-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-status-label-Returns">Returns</h3>
+<dl class="rdoc-list label-list"><dt>Hash
+<dd>
+<p>Descibes various facets of the package&#39;s status.</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-status_source')" id="l_method-i-status_source">show</a>
+                
+              </p>
+              <div id="method-i-status_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 125</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-upload">
+            
+              <b>upload(package, options = {})
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-upload" name="method-i-upload" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Upload a package to the iTunes <a href="../../Store.html">Store</a>.</p>
+
+<h3 id="method-i-upload-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>package (String)
+<dd>
+<p>The path to the package directory to upload. Package names must end in
+<code>.itmsp</code>.</p>
+</dd><dt>options (Hash)
+<dd>
+<p><a href="../Transporter.html">Transporter</a> options</p>
+</dd></dl>
+
+<h3 id="method-i-upload-label-Options">Options</h3>
+<dl class="rdoc-list label-list"><dt>:transport (String)
+<dd>
+<p>The method/protocol used to upload your package. Optional. Can be one of:
+<code>&quot;Aspera&quot;</code>, <code>&quot;Signiant&quot;</code>, or
+<code>&quot;DEV&quot;</code>. By default <code>iTMSTransporter</code>
+automatically selects the transport.</p>
+</dd><dt>:rate (Integer)
+<dd>
+<p>Target bitrate in Kbps. Optional, only used with <code>Aspera</code> and
+<code>Signiant</code></p>
+</dd><dt>:success (String)
+<dd>
+<p>A directory to move the package to if the upload succeeds</p>
+</dd><dt>:failure (String)
+<dd>
+<p>A directory to move the package to if the upload fails</p>
+</dd><dt>:delete (Boolean)
+<dd>
+<p>Delete the package if the upload succeeds. Defaults to <code>false</code>.</p>
+</dd><dt>:log_history (String)
+<dd>
+<p>Write an <code>iTMSTransporter</code> log to this directory. Off by
+default.</p>
+</dd><dt>:streams (Integer)
+<dd>
+<p>Number of data streams to use. Optional, only used with
+<code>Signiant</code></p>
+</dd><dt>:batch (Boolean)
+<dd>
+<p>Allow batch uploads if <code>package</code> is a regular directory.
+Optional, defaults to <code>false</code> but <strong>will default to
+<code>true</code> in <code>v0.3.0</code></strong>.</p>
+</dd></dl>
+
+<h3 id="method-i-upload-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-upload-label-Returns">Returns</h3>
+
+<p><code>true</code> if the upload was successful.</p>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-upload_source')" id="l_method-i-upload_source">show</a>
+                
+              </p>
+              <div id="method-i-upload_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 156</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-verify">
+            
+              <b>verify(package, options = {})
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-verify" name="method-i-verify" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Validate the contents of a package&#39;s metadata and assets.</p>
+
+<p>If verification fails an <a href="ExecutionError.html">ExecutionError</a>
+containing the errors will be raised. Each error message is an instance of
+<a href="TransporterMessage.html">TransporterMessage</a>.</p>
+
+<h3 id="method-i-verify-label-Arguments">Arguments</h3>
+<dl class="rdoc-list label-list"><dt>package (String)
+<dd>
+<p>The path to the package directory to verify. Package names must end in
+<code>.itmsp</code>.</p>
+</dd><dt>options (Hash)
+<dd>
+<p>Verify options</p>
+</dd></dl>
+
+<h3 id="method-i-verify-label-Options">Options</h3>
+<dl class="rdoc-list label-list"><dt>:batch (Boolean)
+<dd>
+<p>Allow batch verification if <code>package</code> is a regular directory.
+Optional, defaults to <code>false</code> but <strong>will default to
+<code>true</code> in <code>v0.3.0</code></strong>.</p>
+</dd><dt>:verify_assets (Boolean)
+<dd>
+<p>If false the assets will not be verified. Defaults to <code>true</code>.</p>
+</dd></dl>
+
+<h3 id="method-i-verify-label-Errors">Errors</h3>
+
+<p><a href="TransporterError.html">TransporterError</a>, <a
+href="OptionError.html">OptionError</a>, <a
+href="ExecutionError.html">ExecutionError</a></p>
+
+<h3 id="method-i-verify-label-Returns">Returns</h3>
+
+<p><code>true</code> if the package was verified.</p>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-verify_source')" id="l_method-i-verify_source">show</a>
+                
+              </p>
+              <div id="method-i-verify_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 184</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-version">
+            
+              <b>version
+</b>
+            
+            <a href="../../../../classes/ITunes/Store/Transporter/ITMSTransporter.html#method-i-version" name="method-i-version" class="permalink">Link</a>
+          </div>
+          
+          
+            <div class="description">
+              <p>Return the underlying <code>iTMSTransporter</code> version.</p>
+
+<h3 id="method-i-version-label-Returns">Returns</h3>
+<dl class="rdoc-list label-list"><dt>String
+<dd>
+<p>The version number</p>
+</dd></dl>
+            </div>
+          
+          
+          
+
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-version_source')" id="l_method-i-version_source">show</a>
+                
+              </p>
+              <div id="method-i-version_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/itunes/store/transporter/itms_transporter.rb, line 195</span>
+        </pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+
+    </div>
+  </body>
+</html>    
