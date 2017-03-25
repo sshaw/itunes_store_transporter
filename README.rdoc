@@ -50,7 +50,7 @@ that it can send email notifications and allows one to set global/per-command de
 
 === Locating iTMSTransporter
 
-If the +iTMSTransporter+ cannot be found in {one your platform's known locations}[https://github.com/sshaw/itunes_store_transporter/tree/master/lib/itunes/store/transporter/shell.rb#L28-L40] you must specify it when creating an instance of <code>iTunes::Store::Transporter</code> via {the <code>:path</code> option}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html#method-c-new-label-Options].
+If the +iTMSTransporter+ cannot be found in {one your platform's known locations}[https://github.com/sshaw/itunes_store_transporter/blob/fcb4f0f9ada4a45764160beac6a049b0d419c8a9/lib/itunes/store/transporter/shell.rb#L31] you must specify it when creating an instance of <code>iTunes::Store::Transporter</code> via {the <code>:path</code> option}[http://www.rubydoc.info/gems/itunes_store_transporter/ITunes/Store/Transporter/ITMSTransporter#initialize-instance_method].
 
 If you're using the bundled +itms+ command you must use its +--path+ option or specify the path in the itms config file. See the +itms+ section for more info.
 
@@ -169,7 +169,7 @@ As you can see, command options are turned into template variables.
 * Docs: http://www.rubydoc.info/gems/itunes_store_transporter
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 * Source Code: http://github.com/sshaw/itunes_store_transporter
-* Transporter GUI: http://github.com/sshaw/itunes_store_transporter_web
+* iTunes Store Transporter: GUI: http://transportergui.com
 
 === Author
 
