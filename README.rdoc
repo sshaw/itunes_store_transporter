@@ -77,8 +77,8 @@ This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following do
 
 <code>itms COMMAND [OPTIONS] [PACKAGE]</code>
 
-* +COMMAND+ - The command to run, which can be any one of {the <code>iTunes::Store::Transporter</code> methods}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html]
-* +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in a strict long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix. For more info see {each command's options}[http://ruby-doc.org/gems/docs/i/itunes_store_transporter-0.1.1/ITunes/Store/Transporter/ITMSTransporter.html].
+* +COMMAND+ - The command to run, which can be any one of {the <code>iTunes::Store::Transporter</code> methods}[http://sshaw.github.io/itunes_store_transporter/classes/ITunes/Store/Transporter/ITMSTransporter.html]
+* +OPTIONS+ - These are quivalent to the given +COMMAND+'s options except they must be given in a strict long option format. For example <code>:apple_id => "X123"</code> would be <code>--apple-id=X123</code>. Boolean options can be negated with the <code>--no-</code> prefix. For more info see {each command's options}[http://sshaw.github.io/itunes_store_transporter/classes/ITunes/Store/Transporter/ITMSTransporter.html].
 * +PACKAGE+ - The package or directory to operate on, if required by the command
 
 <b>Note that options with a value must contain the equals character</b> (<code>"="</code>).

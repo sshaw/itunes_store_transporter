@@ -1,5 +1,7 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
+require "rdoc/task"
+require "sdoc"
 require "pp"
 
 require "itunes/store/transporter/output_parser"
@@ -8,6 +10,11 @@ require "itunes/store/transporter/xml/status"
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => "spec"
+
+RDoc::Task.new do |rdoc|
+  rdoc.generator = "sdoc"
+  rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+end
 
 namespace :parse do
   desc "parse iTMSTransporter output given via stdin"
