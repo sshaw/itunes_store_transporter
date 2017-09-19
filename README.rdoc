@@ -166,7 +166,7 @@ As you can see, command options are turned into template variables.
 
 === More Info
 
-* Docs: http://www.rubydoc.info/gems/itunes_store_transporter
+* Docs: http://sshaw.github.io/itunes_store_transporter
 * Bugs: http://github.com/sshaw/itunes_store_transporter/issues
 * Source Code: http://github.com/sshaw/itunes_store_transporter
 * iTunes Store Transporter: GUI: http://transportergui.com
