@@ -54,25 +54,6 @@ If the +iTMSTransporter+ cannot be found in {one your platform's known locations
 
 If you're using the bundled +itms+ command you must use its +--path+ option or specify the path in the itms config file. See the +itms+ section for more info.
 
-=== Running on Windows
-
-On Windows +iTMSTransporter+ is called via the +iTMSTransporter.CMD+ batch file. This file does not handle the
-+iTMSTransporter+'s exit status correctly, causing <code>iTunes::Store::Transporter</code> to report everything as a success.
-
-This can be fixed by modifying +iTMSTransporter.CMD+ (note that the following does not mimic the batch file exactly):
-
-  ...
-
-  call iTMSTransporter\iTMSTransporter %*
-
-  REM Add this line:
-  set exited=%errorlevel%
-
-  cd %olddir%
-
-  REM Add this line too:
-  exit /b %exited%
-
 === Using itms
 
 <code>itms COMMAND [OPTIONS] [PACKAGE]</code>
