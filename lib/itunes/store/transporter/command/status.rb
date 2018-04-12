@@ -12,6 +12,8 @@ module ITunes
         class Status < Mode
           def initialize(*config)
             super
+            options.on *SHORTNAME
+            options.on *ITC_PROVIDER
             options.on :vendor_id, "-vendor_ids", /\w/, :multiple => true
             options.on :apple_id, "-apple_ids", /\w/, :multiple => true
             options.on :format, "-outputFormat", %w[xml]

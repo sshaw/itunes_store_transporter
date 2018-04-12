@@ -14,6 +14,8 @@ module ITunes
         class Verify < BatchMode
           def initialize(*config)
             super
+            options.on *SHORTNAME
+            options.on *ITC_PROVIDER
             options.on :verify_assets, "-disableAssetVerification", Optout::Boolean  # If false verify MD only no assets
           end
 

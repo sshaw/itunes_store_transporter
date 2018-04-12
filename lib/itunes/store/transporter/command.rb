@@ -86,7 +86,6 @@ module ITunes
             options.on :mode, "-m", /\w+/, :required => true
             options.on :username, "-u", :required => true
             options.on :password, "-p", :required => true
-            options.on *SHORTNAME
           end
 
           protected

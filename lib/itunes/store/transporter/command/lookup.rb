@@ -14,6 +14,9 @@ module ITunes
         class Lookup < Mode
           def initialize(*config)
             super
+            options.on *SHORTNAME
+            options.on *ITC_PROVIDER
+
             # These 2 are mutually exclusive, and one is required.
             # Optout has no way to denote this
             options.on *VENDOR_ID

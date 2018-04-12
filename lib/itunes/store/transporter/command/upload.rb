@@ -15,6 +15,8 @@ module ITunes
             options.on *TRANSPORT
             options.on *SUCCESS
             options.on *FAILURE
+            options.on *SHORTNAME
+            options.on *ITC_PROVIDER
             options.on :delete, "-delete", Optout::Boolean
             options.on :rate, "-k", Integer  # Required if TRANSPORT is Aspera or Signiant
             options.on :streams, "-numStreams", Integer  # Only valid if TRANSPORT is Signiant
