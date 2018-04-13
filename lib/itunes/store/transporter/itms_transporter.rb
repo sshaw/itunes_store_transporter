@@ -18,7 +18,8 @@ module ITunes
         #
         # [:username (String)] Your username
         # [:password (String)] Your password
-        # [:shortname (String)] Your shortname. Optional, not every iTunes account has one
+        # [:shortname (String)] Your shortname (encoding house user). Optional, not every iTunes account has one
+        # [:itc_provider (String)] Your iTunes Connect user. Optional, not every iTunes account has one
         # [:path (String)] The path to the +iTMSTransporter+. Optional.
         # [:print_stdout (Boolean)] Print +iTMSTransporter+'s stdout to your stdout. Defaults to +false+.
         # [:print_stderr (Boolean)] Print +iTMSTransporter+'s stderr to your stderr. Defaults to +false+.
