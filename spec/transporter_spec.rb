@@ -45,7 +45,7 @@ describe ITunes::Store::Transporter::ITMSTransporter do
   describe "#new" do
     context "when the options are not a Hash or nil" do
       it "raises an ArgumentError" do
-	lambda { described_class.new(123) }.should raise_exception(ArgumentError, /must be/)
+	expect { described_class.new(123) }.to raise_exception(ArgumentError, /must be/)
       end
     end
   end

@@ -20,7 +20,7 @@ module ITunes
 end
 
 unless ENV["ITUNES_STORE_TRANSPORTER_NO_SYNTAX_SUGAR"].to_i > 0
-  def iTunes
+  def iTunes                    # :nodoc: all
     ITunes
   end
 end

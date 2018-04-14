@@ -54,9 +54,14 @@ describe ITunes::Store::Transporter::OutputParser do
       before(:all) { @parser = described_class.new(fixture("errors_and_warnings.with_error_number")) }
 
       subject { @parser }
-      its(:warnings) { should be_empty }
-      its(:errors) { should have(2).items }
 
+      it "generates no warnings" do
+        expect(@parser.warnings).to be_empty
+      end
+
+      it "generates two errors" do
+        expect(@parser.errors.size).to eq 2
+      end
 
       describe "the first error" do
         subject { @parser.errors.first }
@@ -85,8 +90,14 @@ describe ITunes::Store::Transporter::OutputParser do
     before(:all) { @parser = described_class.new(fixture("errors_and_warnings.single_warning")) }
 
     subject { @parser }
-    its(:errors) { should be_empty }
-    its(:warnings) { should have(1).item }
+
+    it "generates no errors" do
+      expect(@parser.errors).to be_empty
+    end
+
+    it "generates one warning" do
+      expect(@parser.warnings.size).to eq 1
+    end
 
     describe "the warning" do
       subject { @parser.warnings.first }

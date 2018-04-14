@@ -19,7 +19,7 @@ shared_examples_for "a transporter option that expects a directory" do |option, 
 
   context "when the directory does not exist" do
     it "raises an OptionError" do
-      lambda { subject.run(options.merge(option => "__baaaaahd_directory__")) }.should raise_exception(ITunes::Store::Transporter::OptionError, /does not exist/)
+      expect { subject.run(options.merge(option => "__baaaaahd_directory__")) }.to raise_exception(ITunes::Store::Transporter::OptionError, /does not exist/)
     end
   end
 end
@@ -265,7 +265,7 @@ shared_examples_for "a command that requires a package argument" do
       path = Tempfile.new("").path
       options = create_options(:package => path)
       # TODO: Optout's error message will probably be changed to something more descriptive, change this when that happens
-      lambda { subject.run(options) }.should raise_error(ITunes::Store::Transporter::OptionError, /dir/i)
+      expect { subject.run(options) }.to raise_error(ITunes::Store::Transporter::OptionError, /dir/i)
     end
   end
 end
@@ -394,7 +394,7 @@ describe ITunes::Store::Transporter::Command::Lookup do
         before { FileUtils.rm_rf(@tmpdir) }
 
         it "raises a TransporterError" do
-          lambda { subject.run(options) }.should raise_exception(ITunes::Store::Transporter::TransporterError, /no metadata file/i)
+          expect { subject.run(options) }.to raise_exception(ITunes::Store::Transporter::TransporterError, /no metadata file/i)
         end
       end
     end
