@@ -54,7 +54,13 @@ shared_examples_for "a required option" do |option|
   end
 end
 
+shared_examples_for "a command that accepts an itc_provider argument" do
+  it_should_behave_like "a transporter option", { :itc_provider => "sshaw" }, "-itc_provider", "sshaw"
+end
+
 shared_examples_for "a command that accepts a shortname argument" do
+  it_should_behave_like "a transporter option", { :shortname => "sshaw" }, "-s", "sshaw"
+
   context "when the shortname's invalid" do
     it "raises an OptionError" do
       expect { subject.run(options.merge(:shortname => "+")) }.to raise_exception(ITunes::Store::Transporter::OptionError, /shortname/)
@@ -288,6 +294,7 @@ describe ITunes::Store::Transporter::Command::Upload do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that requires a package argument"
   it_behaves_like "a command that accepts a shortname argument"
+  it_behaves_like "a command that accepts an itc_provider argument"
 
   subject { described_class.new({}) }
   let(:options) { create_options(:package => create_package, :transport => "Aspera")  }
@@ -348,6 +355,7 @@ end
 describe ITunes::Store::Transporter::Command::Lookup do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that accepts a shortname argument"
+  it_behaves_like "a command that accepts an itc_provider argument"
 
   subject { described_class.new({}) }
 
@@ -409,6 +417,7 @@ end
 describe ITunes::Store::Transporter::Command::Schema do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that accepts a shortname argument"
+  it_behaves_like "a command that accepts an itc_provider argument"
 
   subject { described_class.new({}) }
   let(:options) { create_options(:type => "strict", :version => "film5") }
@@ -458,6 +467,8 @@ end
 describe ITunes::Store::Transporter::Command::Status do
   # Ugh, issue with stubbed print_stdout test, we need XML here :(
   #it_behaves_like "a transporter mode"
+  it_behaves_like "a command that accepts a shortname argument"
+  it_behaves_like "a command that accepts an itc_provider argument"
 
   subject { described_class.new({}) }
   let(:options) { create_options(:vendor_id => 123123) }
@@ -578,6 +589,7 @@ describe ITunes::Store::Transporter::Command::Verify do
   it_behaves_like "a transporter mode"
   it_behaves_like "a command that requires a package argument"
   it_behaves_like "a command that accepts a shortname argument"
+  it_behaves_like "a command that accepts an itc_provider argument"
 
   subject { described_class.new({}) }
   let(:options) { create_options(:package => create_package) }
