@@ -46,7 +46,7 @@ that it can send email notifications and allows one to set global/per-command de
 === Requirements
 
 * Optout (<code>gem install optout</code>)
-* iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
+* iTunes Store Transporter (https://help.apple.com/itc/transporteruserguide/)
 
 === Installation
 
