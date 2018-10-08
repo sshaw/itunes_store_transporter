@@ -48,6 +48,10 @@ that it can send email notifications and allows one to set global/per-command de
 * Optout (<code>gem install optout</code>)
 * iTunes Store Transporter (http://www.apple.com/itunes/sellcontent)
 
+=== Installation
+
+Add `gem "itunes_store_transporter"` to your Ruby project's Gemfile to use as a library, or run `gem install itunes_store_transporter` to install system-wide for CLI usage.
+
 === Locating iTMSTransporter
 
 If the +iTMSTransporter+ cannot be found in {one your platform's known locations}[https://github.com/sshaw/itunes_store_transporter/blob/fcb4f0f9ada4a45764160beac6a049b0d419c8a9/lib/itunes/store/transporter/shell.rb#L31] you must specify it when creating an instance of <code>iTunes::Store::Transporter</code> via {the <code>:path</code> option}[http://www.rubydoc.info/gems/itunes_store_transporter/ITunes/Store/Transporter/ITMSTransporter#initialize-instance_method].
