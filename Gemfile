@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 gemspec
 
 # Ruby < 2.2 on Windows installs v6, which requires 2.2
