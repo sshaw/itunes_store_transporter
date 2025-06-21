@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.add_dependency "childprocess", "~> 0.3.2"
   s.add_dependency "optout", "~> 0.0.2"
-  s.add_development_dependency "rake", "~> 0.9.2"
-  s.add_development_dependency "rspec", "~> 2.9", "< 3"
+  s.add_dependency "rexml", "~> 3.2"
+  s.add_development_dependency "rake", "~> 13.0"
+  s.add_development_dependency "rspec", "~> 3.12"
+  s.add_development_dependency "rspec-its", "~> 1.3"
 end
