@@ -24,11 +24,23 @@ jobs:
         
     - name: "Install appropriate Bundler version"
       run: |
-        if [[ "${{ matrix.ruby-version }}" == "2.7" ]]; then
-          gem install bundler -v "< 2.4"
-        else
-          gem install bundler -v ">= 2.4"
-        fi
+        case "${{ matrix.ruby-version }}" in
+          "2.7")
+            gem install bundler -v "~> 2.3.0"
+            ;;
+          "3.0")
+            gem install bundler -v "~> 2.4.0"
+            ;;
+          "3.1")
+            gem install bundler -v "~> 2.4.0"
+            ;;
+          "3.2")
+            gem install bundler -v "~> 2.5.0"
+            ;;
+          "3.3")
+            gem install bundler -v "~> 2.5.0"
+            ;;
+        esac
         
     - name: "Run bundle install"
       run: "bundle install"
