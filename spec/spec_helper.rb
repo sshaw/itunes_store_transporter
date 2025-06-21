@@ -1,4 +1,5 @@
 require "rspec"
+require "rspec/its"
 require "yaml"
 require "tempfile"
 require "fileutils"
@@ -17,8 +18,8 @@ module SpecHelper
 
   def expect_shell_args(*expected)
     output = expected.last.is_a?(Hash) ? expected.pop : {}
-    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) do |*args, &block|
-      expect(args.first).to include(*expected)
+    allow_any_instance_of(ITunes::Store::Transporter::Shell).to receive(:exec) do |shell, argv, &block|
+      expect(argv).to include(*expected)
 
       [:stdout, :stderr].each do |fd|
         next unless output[fd]
@@ -47,7 +48,7 @@ module SpecHelper
       outputs << [ lines, fd ]
     end
 
-    ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) do |*options, &block|
+    allow_any_instance_of(ITunes::Store::Transporter::Shell).to receive(:exec) do |shell, argv, &block|
       outputs.each do |lines, fd|
         lines.each { |line| block.call(line, fd) }
       end
@@ -82,4 +83,14 @@ end
 
 RSpec.configure do |config|
   config.include(SpecHelper)
+  
+  # Enable old should syntax for backward compatibility
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+  
+  # Enable old mock syntax for backward compatibility  
+  config.mock_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
 end

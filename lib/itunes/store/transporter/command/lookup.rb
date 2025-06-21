@@ -37,7 +37,7 @@ module ITunes
             id = options[:apple_id] || options[:vendor_id]
             path = File.join(options[:destination], "#{id}.itmsp", "metadata.xml")
 
-            if !File.exists?(path)
+            if !File.exist?(path)
               raise TransporterError, "No metadata file exists at #{path}"
             end
 

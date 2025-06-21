@@ -34,7 +34,7 @@ shared_examples_for "a boolean transporter option" do |option, expected|
 
   context "when false" do
     it "does not create the command line argument" do
-      ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should_not include(*expected); 0 }
+      allow_any_instance_of(ITunes::Store::Transporter::Shell).to receive(:exec) { |shell, arg| expect(arg).not_to include(*expected); 0 }
       subject.run(options.merge(option => false))
     end
   end
@@ -387,7 +387,7 @@ describe ITunes::Store::Transporter::Command::Lookup do
     context "when successful" do
       it "returns the metadata and deletes the temp directory used to output the metadata" do
         expect(subject.run(options)).to eq @metadata
-        expect(File.exists?(@tmpdir)).to be false
+        expect(File.exist?(@tmpdir)).to be false
       end
 
       context "when the metadata file was not created" do
@@ -622,7 +622,7 @@ describe ITunes::Store::Transporter::Command::Verify do
     describe ":verify_assets" do
       context "when true" do
         it "does not create the command line argument" do
-          ITunes::Store::Transporter::Shell.any_instance.should_receive(:exec) { |*arg| arg.first.should_not include("-disableAssetVerification"); 0 }
+          allow_any_instance_of(ITunes::Store::Transporter::Shell).to receive(:exec) { |shell, arg| expect(arg).not_to include("-disableAssetVerification"); 0 }
           subject.run(options.merge(:verify_assets => true))
         end
       end
