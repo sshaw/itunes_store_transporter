@@ -1,0 +1,26 @@
+name: "CI"
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    
+    steps:
+    - name: "Checkout code"
+      uses: "actions/checkout@v4"
+      
+    - name: "Set up Ruby 2.7"
+      uses: "ruby/setup-ruby@v1"
+      with:
+        ruby-version: "2.7"
+        
+    - name: "Run bundle install"
+      run: "bundle install"
+        
+    - name: "Run default Rake task"
+      run: "bundle exec rake"
